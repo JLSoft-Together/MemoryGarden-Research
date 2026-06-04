@@ -1,0 +1,136 @@
+/* ============================================================
+   Theme: PIXEL / GAME-Y
+   Pixel art, viền đậm vuông, palette retro. Vibe Stardew/Pokémon.
+   Nhấn mạnh collection game.
+   ============================================================ */
+
+body[data-theme="pixel"] {
+  --bg-stage: #1a1228;
+  --bg-app: #f4ecd8;          /* giấy game cũ */
+  --bg-elev: #e6d8b8;
+  --bg-card: #fffdf3;
+  --text: #2b2233;
+  --text-dim: #7a6a8a;
+  --primary: #3aa655;         /* xanh lá pixel */
+  --primary-ink: #fffdf3;
+  --accent: #e8632b;          /* cam pixel */
+  --border: #2b2233;          /* viền đen đậm */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+  --shadow-card: 4px 4px 0 #2b2233;
+  --font: "VT323", "Press Start 2P", "Courier New", monospace;
+  --font-display: "Press Start 2P", "VT323", monospace;
+  --grid-line: rgba(43,34,51,.12);
+  --garden-bg:
+    repeating-conic-gradient(#9bd16a 0% 25%, #8cc55e 0% 50%) 0 0 / 36px 36px;
+  --plot-bg: #fffdf3;
+}
+
+/* VT323 hơi nhỏ — phóng to chữ thân */
+body[data-theme="pixel"] { font-size: 19px; }
+
+body[data-theme="pixel"] {
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 4px),
+    var(--bg-stage);
+  image-rendering: pixelated;
+}
+
+/* phone: góc vuông, viền dày kiểu console */
+body[data-theme="pixel"] .phone {
+  border-radius: 14px;
+  border: 14px solid #2b2233;
+  box-shadow: 0 0 0 4px #5a4a6e, 0 26px 60px rgba(0,0,0,.55);
+}
+body[data-theme="pixel"] .notch { border-radius: 0 0 4px 4px; background: #2b2233; }
+
+/* mọi card / control = viền đen 2px + hard shadow (không bo góc) */
+body[data-theme="pixel"] .card,
+body[data-theme="pixel"] .stat,
+body[data-theme="pixel"] .atlas .cell,
+body[data-theme="pixel"] .shop-card,
+body[data-theme="pixel"] .plot,
+body[data-theme="pixel"] .mem-thumb,
+body[data-theme="pixel"] .ms-emo,
+body[data-theme="pixel"] .icon-btn,
+body[data-theme="pixel"] .chip,
+body[data-theme="pixel"] .field input,
+body[data-theme="pixel"] .field textarea,
+body[data-theme="pixel"] .segment,
+body[data-theme="pixel"] .widget {
+  border: 2px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border);
+}
+
+body[data-theme="pixel"] .btn {
+  border: 3px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+body[data-theme="pixel"] .btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--border); }
+
+/* garden = ô cỏ pixel + viền đậm */
+body[data-theme="pixel"] .garden {
+  border: 3px solid var(--border);
+  box-shadow: 5px 5px 0 var(--border);
+  padding: 12px;
+}
+body[data-theme="pixel"] .plot {
+  border: 2px solid var(--border);
+  box-shadow: 2px 2px 0 var(--border);
+  background: var(--plot-bg);
+}
+body[data-theme="pixel"] .plot.empty { border-style: dashed; box-shadow: none; }
+
+/* stage tag kiểu HUD game */
+body[data-theme="pixel"] .plot .stage-tag {
+  background: var(--border); border-radius: 0; font-size: 9px;
+}
+
+/* atlas: rarity dot vuông */
+body[data-theme="pixel"] .atlas .cell .rarity-dot { border-radius: 0; width: 9px; height: 9px; border: 1px solid var(--border); }
+body[data-theme="pixel"] .atlas .cell.locked .emo { filter: grayscale(1) brightness(0) opacity(.22); }
+
+/* ring + bar góc vuông */
+body[data-theme="pixel"] .ring { border-radius: 0; }
+body[data-theme="pixel"] .ring::after { border-radius: 0; border: 2px solid var(--border); }
+body[data-theme="pixel"] .bar { border-radius: 0; border: 2px solid var(--border); height: 12px; }
+body[data-theme="pixel"] .bar > span { border-radius: 0; }
+
+/* nav: pixel HUD bar */
+body[data-theme="pixel"] .bottomnav { border-top: 3px solid var(--border); }
+body[data-theme="pixel"] .navitem.fab .ico {
+  border-radius: 0;
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border);
+}
+
+/* chips active = invert */
+body[data-theme="pixel"] .chip { border-radius: 0; }
+body[data-theme="pixel"] .chip.active { box-shadow: 2px 2px 0 var(--border); }
+
+/* badge / toast vuông */
+body[data-theme="pixel"] .badge-done,
+body[data-theme="pixel"] .shop-card .own,
+body[data-theme="pixel"] .rare-tag,
+body[data-theme="pixel"] .toast,
+body[data-theme="pixel"] .style-switch { border-radius: 0; }
+
+body[data-theme="pixel"] .toast { border: 2px solid #000; box-shadow: 3px 3px 0 #000; }
+
+/* display headings nhỏ lại vì Press Start 2P rất to */
+body[data-theme="pixel"] .appbar .title { font-size: 13px; line-height: 1.5; }
+body[data-theme="pixel"] .appbar .title small { font-size: 9px; }
+body[data-theme="pixel"] .section-title { font-size: 11px; }
+body[data-theme="pixel"] .stat .n { font-size: 14px; }
+body[data-theme="pixel"] .bloom-overlay h2 { font-size: 14px; line-height: 1.6; }
+body[data-theme="pixel"] h1 { font-size: 13px; }
+
+/* bloom overlay nền pixel */
+body[data-theme="pixel"] .bloom-overlay {
+  background:
+    repeating-conic-gradient(rgba(255,255,255,.9) 0% 25%, rgba(155,209,106,.9) 0% 50%) 0 0 / 40px 40px;
+}
+body[data-theme="pixel"] .bloom-overlay .seedling { image-rendering: pixelated; }

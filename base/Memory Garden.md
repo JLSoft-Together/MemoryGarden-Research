@@ -50,6 +50,7 @@ Nguồn doanh thu chính.
 * Rare Plant
 * Growth Boost
 * Random Decoration
+* Out-of-season Seed (mở cây seasonal trái mùa — đòn bẩy FOMO theo mùa)
 
 ---
 
@@ -128,6 +129,7 @@ Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc
 * Plant
 * Bloom
 * Rare Bloom
+* Ảnh hưởng theo **mùa** (xem mục 9): cây hợp mùa được glow + bonus Rare, bloom đổi sắc theo mùa (additive — mùa không bao giờ chặn growth hay first bloom)
 
 ---
 
@@ -229,6 +231,20 @@ Hiển thị kỷ niệm cùng ngày trong quá khứ.
 
 ---
 
+## 9. Season System (4 mùa)
+
+> Chi tiết thiết kế: `.planning/SEASON_SYSTEM.md`. Vai trò: **retention layer** (D7+/comeback), additive-only.
+
+* 4 mùa **Xuân / Hạ / Thu / Đông** theo lịch thực thiết bị (Bắc bán cầu, default; toggle hemisphere ở Settings)
+* **Additive-only**: mùa cộng bonus, KHÔNG chặn growth; **first bloom miễn nhiễm mùa**
+* Mỗi mùa ưu ái 2 category → **+20% Rare bloom** + glow cho cây hợp mùa
+* **Bloom variant** đổi sắc theo mùa (hồng phấn / vàng nắng / cam đỏ / trắng bạc)
+* Visual: vườn đổi palette + particle (🌸/✨/🍂/❄️) + banner mùa
+* **Seasonal-exclusive plants**: cây chỉ mở đúng mùa — bộ sưu tập **riêng**, KHÔNG tính vào mốc 100% core (tránh time-gate completionist)
+* Monetization: rewarded **Out-of-season Seed**, IAP theme/deco theo mùa
+
+---
+
 # MVP Scope (V1)
 
 ## Bắt buộc
@@ -238,8 +254,14 @@ Hiển thị kỷ niệm cùng ngày trong quá khứ.
 * Collection
 * Garden
 * 30-50 loại cây
+* Season System — ambient (palette + particle + bloom variant theo 4 mùa)
 * Native Ads
 * Rewarded Ads
+
+## Phase 2
+
+* Seasonal-exclusive collection + Seasonal Event (Sakura Week...)
+* Memory-date season (lớp B — gắn Timeline/Life Journey)
 
 ## Chưa làm
 

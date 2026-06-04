@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Garden — Interactive Mockup</title>
+
+  <!-- Fonts: cozy (Nunito/Baloo) + pixel (Press Start 2P/VT323). Fallback monospace nếu offline. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/theme-cozy.css">
+  <link rel="stylesheet" href="css/theme-pixel.css">
+</head>
+<body data-theme="cozy">
+
+  <!-- Control bar (ngoài phone) -->
+  <div class="toolbar">
+    <h1>🌱 Memory Garden <span class="sub">— interactive mockup · 8 features</span></h1>
+    <div class="style-switch">
+      <button data-theme-btn="cozy" class="active">🌸 Cozy</button>
+      <button data-theme-btn="pixel">🎮 Pixel</button>
+    </div>
+  </div>
+
+  <!-- Phone -->
+  <div class="phone">
+    <div class="notch"></div>
+
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="right">📶 🔋</span>
+    </div>
+
+    <div class="appbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="icon-btn" id="barBack" style="display:none">‹</button>
+        <div class="title" id="barTitle"></div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" title="Tìm">🔍</button>
+        <button class="icon-btn" title="Hồ sơ">🧑‍🌾</button>
+      </div>
+    </div>
+
+    <div class="screen" id="screenBody"></div>
+
+    <nav class="bottomnav" id="nav"></nav>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <!-- Feature legend (mapping mockup ↔ 8 chức năng) -->
+  <div style="max-width:560px;color:#aeb4c0;font-size:12px;line-height:1.7;text-align:center">
+    <b style="color:#e7e9ee">8 chức năng &amp; nơi xem:</b><br>
+    1️⃣ Memory Mgmt → <i>Create</i> &nbsp;·&nbsp;
+    2️⃣ Garden System → <i>Garden</i> &nbsp;·&nbsp;
+    3️⃣ Collection → <i>Atlas</i> &nbsp;·&nbsp;
+    4️⃣ Categories → <i>More › Categories</i><br>
+    5️⃣ Timeline → <i>Timeline</i> &nbsp;·&nbsp;
+    6️⃣ Milestones → <i>More › Milestones</i> &nbsp;·&nbsp;
+    7️⃣ Widgets → <i>More › Widgets</i> &nbsp;·&nbsp;
+    8️⃣ Customization → <i>More › Customization</i> &nbsp;·&nbsp;
+    🍂 Seasons → <i>Garden (switcher)</i> + badge ở <i>Atlas</i><br>
+    <span style="color:#7a818d">💡 Nhấn <b>Create › Lưu &amp; gieo hạt</b> để xem First Bloom · Đổi <b>4 mùa</b> ở thanh trên Garden (vườn đổi sắc + particle, cây hợp mùa có glow bonus) · Toggle Cozy/Pixel góc trên.</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
