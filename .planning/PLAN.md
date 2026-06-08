@@ -52,7 +52,9 @@ brainstorm/mockups/
 ## Spec code Android (Compose)
 - **Spec đầy đủ:** `.planning/COMPOSE_SPEC.md` — kiến trúc MVI, data/domain layer, 8 màn + overlay, design system Cozy/Pixel (token+Modifier, KHÔNG dùng Styles API alpha — để dành post-MVP), engine mùa + growth, chia **9 phase** (Phase 0 nền tảng → Phase 8 release).
 - Map mockup (vanilla JS) → Compose ở mục 11 của spec.
-- **Asset spec:** `.planning/ASSET_SPEC.md` — danh sách asset (icon, ~104 plant sprite, animation, audio), tách Design tay / Gen AI / Code-drawn, bảng số lượng + pipeline. 3 quyết định cần chốt sớm: (a) MVP 1 hay 2 style, (b) plant stage tiết kiệm vs full, (c) audio vào MVP?
+- **Asset spec:** `.planning/ASSET_SPEC.md` — danh sách asset, tách Design tay / Gen AI / Code-drawn, bảng số lượng + pipeline.
+- **3 quyết định asset đã CHỐT (2026-06-08):** (a) ✅ cả 2 style Cozy+Pixel · (b) ✅ full 5 stage · (c) ✅ audio theo đề xuất (SFX MVP + 1 BGM ambient, 4 BGM mùa Phase 2). → plant sprite = **340** (34×5×2).
+- **Prompt AI sẵn dùng:** `.planning/ASSET_PROMPTS.md` — công thức ghép + 2 reference sheet + 34 plant subject + branding/season/bg/deco/onboarding/anim/audio + checklist gen theo thứ tự.
 
 ## Ghi chú
 - Repo research, KHÔNG có code Android (Kotlin) → bỏ qua android-code-indexer / bug-pool.

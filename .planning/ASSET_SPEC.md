@@ -8,7 +8,7 @@
 
 ## 0. Nguyên tắc asset (đọc trước)
 
-1. **2 phong cách song song** — **Cozy** (pastel, bo tròn, soft shadow, vibe Animal Crossing/cottagecore) và **Pixel** (retro, viền đen 2-4px, hard shadow, palette giấy cũ, vibe Stardew/Pokémon, `image-rendering: pixelated`). Nhiều asset cần **2 bản**. Quyết định sớm: **MVP ship 1 style trước** (đề xuất Cozy) hay cả 2? → ảnh hưởng x2 khối lượng (xem §15).
+1. **2 phong cách song song** — **Cozy** (pastel, bo tròn, soft shadow, vibe Animal Crossing/cottagecore) và **Pixel** (retro, viền đen 2-4px, hard shadow, palette giấy cũ, vibe Stardew/Pokémon, `image-rendering: pixelated`). Nhiều asset cần **2 bản**. **ĐÃ CHỐT: ship cả 2 style từ MVP** → x2 khối lượng (xem §15). Prompt gen sẵn cho cả 2: [.planning/ASSET_PROMPTS.md](ASSET_PROMPTS.md).
 2. **Tối giản qua code, không qua asset:**
    - **Season bloom variant** (4 sắc theo mùa) = **tint trong code** (`ColorFilter`/`ColorMatrix`), KHÔNG render 4× sprite. (Chốt theo SEASON_SYSTEM §14: đổi tint, giữ hình.)
    - **Locked silhouette** (Atlas) = đổ màu đặc sprite bloom qua shader/tint trong code. 0 asset riêng.
@@ -51,20 +51,17 @@ Cần (tối thiểu):
 
 34 loài (`p01`–`p34`, gồm 4 seasonal-exclusive `p31`–`p34`). Mỗi cây có **5 stage**: Seed → Sprout → Plant → Bloom → Rare Bloom.
 
-### 3.1 Chiến lược cắt giảm (quan trọng — quyết định khối lượng)
-- **Stage 0 Seed + Stage 1 Sprout = GENERIC dùng chung** mọi loài (hạt đất + mầm xanh). Người dùng chưa biết cây gì cho tới khi ra Plant. → chỉ **2 sprite/style** (hoặc 6 cat × 2 nếu muốn mầm khác nhau theo category — tùy chọn richer).
-- **Stage 2 Plant + Stage 3 Bloom + Stage 4 Rare Bloom = SPECIES-SPECIFIC** (34 loài × 3 stage).
-- **Season bloom variant** = tint code, **0 asset thêm**.
-- **Rare Bloom** = Bloom + sparkle FX (FX vẽ code) → có thể tái dùng Bloom + overlay, hoặc vẽ riêng cho legendary. Đề xuất: vẽ riêng (đáng tiền cho moment "rare").
+### 3.1 Chiến lược (ĐÃ CHỐT: full 5 stage, cả 2 style)
+- **Mỗi loài đủ 5 stage riêng**: Seed → Sprout → Plant → Bloom → Rare Bloom. KHÔNG dùng generic seed/sprout — mỗi cây có hình mầm đặc trưng (richer reveal, đỡ cảm giác lặp).
+- **Season bloom variant** = tint code, **0 asset thêm** (giữ nguyên — chỉ đổi sắc, không render 4× sprite).
+- **Rare Bloom** = sprite riêng (Bloom + chi tiết ornate/glow), KHÔNG chỉ overlay FX — đáng tiền cho moment "rare".
 
-### 3.2 Số lượng
-| Path | Công thức | Sprite (1 style) | Cả 2 style |
+### 3.2 Số lượng (ĐÃ CHỐT)
+| Path | Công thức | Sprite (1 style) | **Cả 2 style (CHỐT)** |
 |---|---|---|---|
-| **Tiết kiệm (đề xuất MVP)** | 34×3 species + 2 generic | **104** | 208 |
-| Richer (mầm theo category) | 34×3 + 6×2 generic | 114 | 228 |
-| Full (mỗi loài đủ 5 stage) | 34×5 | 170 | 340 |
+| **Full 5 stage × 2 style** ✅ | 34×5 | 170 | **340** |
 
-→ **Đề xuất:** path tiết kiệm, **1 style (Cozy) cho MVP = ~104 sprite**. Pixel + stage đầy đủ = Phase 2.
+→ **CHỐT: full 5 stage, cả Cozy + Pixel = 340 sprite.** Đây là khối lớn nhất → bắt buộc lock style reference (§16) trước khi gen loạt. Prompt từng cây: [.planning/ASSET_PROMPTS.md](ASSET_PROMPTS.md) §2.
 
 ### 3.3 Spec mỗi sprite
 - Khung vuông, nền trong suốt. Cozy: ~512×512 PNG/WebP. Pixel: 64×64 hoặc 96×96 art, export x4.
@@ -236,23 +233,23 @@ Card render bằng Compose (palette theo mùa) → chủ yếu cần frame + log
 
 ## 15. Tổng hợp số lượng (để ước công)
 
-| Hạng mục | MVP — 1 style (Cozy) | MVP — cả 2 style | Phase 2+ |
-|---|---|---|---|
-| Branding/Store | ~8 | ~8 | screenshots |
-| UI icon (Logify, vector) | ~30 | ~30 (dùng chung) | — |
-| **Plant sprite** | **~104** | ~208 | full 5-stage / legendary anim |
-| Category/Mood/Rarity | ~17 | ~17-34 | — |
-| Season visual | ~8 (đa số code) | ~12 | event art |
-| Garden bg + theme pack | ~3 | ~6 | 4 IAP pack |
-| Decorations | 2 (MVP) | 4 | 6-12 đầy đủ |
-| Milestone badge | ~9 | ~18 | — |
-| Onboarding/Coach | ~8 | ~10 | — |
-| Share card | ~3 | ~4 | — |
-| Widget | ~6 | ~9 | — |
-| **Animation** | ~5 phức + nhiều code-drawn | ~8 | decoration idle |
-| **Audio** | ~8 SFX (+1 BGM) | giống | 4 BGM mùa |
+| Hạng mục | MVP — cả 2 style (ĐÃ CHỐT) | Phase 2/7+ |
+|---|---|---|
+| Branding/Store | ~8 (logo/icon +1 bản pixel) | screenshots |
+| UI icon (Logify, vector) | ~30 (linear Cozy + bold Pixel, dùng chung tint) | — |
+| **Plant sprite (full 5 stage × 2 style)** | **340** | legendary anim |
+| Category/Mood/Rarity | ~17-34 | — |
+| Season visual | ~12 (đa số code) | event art |
+| Garden bg + theme pack | ~6 (default ×2) | 4 IAP pack ×2 = 8 |
+| Decorations | 4 (Fountain+Lantern ×2) | đủ 6 ×2 = 12 |
+| Milestone badge | ~18 (9 ×2) | — |
+| Onboarding/Coach | ~10 | — |
+| Share card | ~4 | — |
+| Widget | ~9 | — |
+| **Animation** | ~8 phức (×2 style) + nhiều code-drawn | decoration idle |
+| **Audio (theo đề xuất)** | ~8 SFX + 1 BGM ambient chung | 4 BGM theo mùa |
 
-**Điểm nóng:** plant sprite (~104) là 80% khối lượng → tập trung style guide + AI pipeline ở đây. Mọi thứ "Code-drawn" = 0 asset, lập trình thẳng.
+**Điểm nóng:** plant sprite (**340**) = ~85% khối lượng → bắt buộc lock 2 style reference (§16) + AI pipeline batch trước. Mọi thứ "Code-drawn" = 0 asset, lập trình thẳng. Audio: SFX vào MVP (optional, không chặn loop), BGM ambient 1 loop chung MVP, 4 BGM mùa để Phase 2.
 
 ---
 
@@ -343,7 +340,9 @@ sfx_<name>.ogg / bgm_<name>.ogg   sfx_bloom_chime.ogg · bgm_spring.ogg
 8. **Audio** — cuối, không chặn loop. SFX trước, BGM sau.
 9. **Style thứ 2 (Pixel) + theme pack + decoration đầy đủ + BGM mùa** → Phase 2/7.
 
-**Chốt cần chủ nhân quyết sớm (ảnh hưởng x2 khối lượng):**
-- (a) MVP **1 style hay 2 style**? (đề xuất: Cozy trước.)
-- (b) Plant stage: **path tiết kiệm (3 species-stage)** hay full 5? (đề xuất: tiết kiệm.)
-- (c) Audio có vào MVP không? (đề xuất: SFX optional, BGM Phase 2.)
+**Quyết định đã CHỐT (2026-06-08):**
+- (a) ✅ **Cả 2 style** (Cozy + Pixel) ngay từ MVP.
+- (b) ✅ **Full 5 stage** mỗi loài (không generic seed/sprout).
+- (c) ✅ **Audio theo đề xuất** — SFX optional MVP + 1 BGM ambient chung; 4 BGM mùa để Phase 2.
+
+→ Hệ quả: plant sprite = **340** (34 × 5 stage × 2 style). Prompt AI sẵn dùng: [.planning/ASSET_PROMPTS.md](ASSET_PROMPTS.md).
