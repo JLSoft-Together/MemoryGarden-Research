@@ -29,6 +29,9 @@ const state = {
   createMood: "joy",     // Mood Tracker — mood đang chọn ở màn Create
   editing: false,        // Create đang ở chế độ sửa memory?
   backupDismissed: false,// đã đóng banner nhắc backup chưa
+  // ---- Progressive Unlock (Goal 1: xong onboarding · Goal 2: 1 memory · Goal 3: 3-memory quest) ----
+  goals: { g1: false, g2: false, g3: false },
+  newMemCount: 0,        // số memory tạo mới session này (không tính onboarding)
   // ---- Settings (lưu bằng DataStore ở app thật) ----
   hemisphere: "north",   // Bắc/Nam bán cầu → lịch mùa khớp nơi ở
   particleFx: true,      // bật/tắt hiệu ứng hạt rơi trong vườn
@@ -79,9 +82,10 @@ const NAV = [
 function renderNav() {
   const nav = el("#nav");
   nav.innerHTML = NAV.map((n) => {
+    const locked = n.id === "timeline" && !state.goals.g3;
     const active = n.id === state.screen ? "active" : "";
-    return `<button class="navitem ${n.fab ? "fab" : ""} ${active}" data-nav="${n.id}">
-      <span class="ico">${n.ico}</span><span>${n.label}</span>
+    return `<button class="navitem ${n.fab ? "fab" : ""} ${active} ${locked ? "nav-locked" : ""}" data-nav="${n.id}">
+      <span class="ico">${locked ? "🔒" : n.ico}</span><span>${n.label}</span>
     </button>`;
   }).join("");
 }
@@ -141,8 +145,8 @@ function scGarden() {
     </div>`;
   }).join("");
 
-  // Auto-backup reminder (local-first): nhắc khi đã lâu chưa Export ZIP.
-  const showBackup = BACKUP.lastDays >= BACKUP.remindAfter && !state.backupDismissed;
+  // Auto-backup reminder: chỉ hiện sau Goal 3 (tránh làm phân tâm lúc mới dùng).
+  const showBackup = state.goals.g3 && BACKUP.lastDays >= BACKUP.remindAfter && !state.backupDismissed;
   const backupBanner = showBackup ? `
     <div class="backup-banner">
       <span class="bb-ico">💾</span>
@@ -184,15 +188,18 @@ function scGarden() {
     </div>
 
     <div class="section-title">Khu vườn ký ức
-      <span><span class="link" data-act="shareGarden">📤 Chia sẻ</span>
-        <span class="link" data-act="customize" style="margin-left:10px">Tùy chỉnh</span></span></div>
+      ${state.goals.g3 ? `<span><span class="link" data-act="shareGarden">📤 Chia sẻ</span>
+        <span class="link" data-act="customize" style="margin-left:10px">Tùy chỉnh</span></span>` : ""}</div>
     <div class="garden">${seasonFx()}${plots}</div>
 
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button class="btn reward" data-act="reward" style="flex:1">
-        🎁 Xem ad → Mystery Seed</button>
-      <button class="btn secondary" data-act="quickCapture" style="flex:0 0 auto">⚡ Ghi nhanh</button>
-    </div>
+    ${state.goals.g2
+      ? `<div style="display:flex;gap:10px;margin-top:14px">
+          <button class="btn reward" data-act="reward" style="flex:1">🎁 Xem ad → Mystery Seed</button>
+          <button class="btn secondary" data-act="quickCapture" style="flex:0 0 auto">⚡ Ghi nhanh</button>
+        </div>`
+      : `<div style="margin-top:14px">
+          <button class="btn" data-act="create" style="width:100%">🌱 Thêm kỷ niệm</button>
+        </div>`}
 
     <div class="section-title">Hôm nay <span class="link" data-act="timeline">Tất cả</span></div>
     <div class="card">${MEMORIES.slice(0, 2).map(memRow).join("")}</div>
@@ -252,6 +259,39 @@ function scAtlas() {
     </div>`;
   }).join("");
 
+  // Preview mode trước Goal 2: blur phần dưới + CTA tạo thêm kỷ niệm
+  if (!state.goals.g2) {
+    const need = Math.max(0, 2 - state.newMemCount);
+    return {
+      title: "Garden Atlas", sub: `Preview · tạo thêm để mở`,
+      body: `
+      <div class="card" style="padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:32px">📖</div>
+          <div style="flex:1">
+            <div style="font-weight:800">Atlas sưu tầm — Preview</div>
+            <div style="font-size:12px;color:var(--text-dim)">Tạo thêm kỷ niệm để mở đầy đủ bộ sưu tập</div>
+          </div>
+        </div>
+        <div class="bar" style="margin-top:10px">
+          <span style="width:${Math.min(100, Math.round((state.newMemCount/2)*100))}%"></span>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:4px">
+          ${need > 0 ? `Tạo thêm ${need} kỷ niệm để mở Atlas đầy đủ` : "Gần mở rồi! Lưu thêm 1 kỷ niệm nữa"}
+        </div>
+      </div>
+      <div style="position:relative;overflow:hidden;max-height:200px;border-radius:var(--radius-md)">
+        <div class="atlas">${cells}</div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,var(--bg) 85%);pointer-events:none"></div>
+      </div>
+      <div style="text-align:center;margin-top:14px">
+        <button class="btn" data-act="create" style="max-width:220px">🌱 Thêm kỷ niệm để mở Atlas</button>
+      </div>
+      <div class="hint" style="margin-top:12px">Mỗi kỷ niệm mở thêm loài cây mới. Còn ${need} kỷ niệm nữa để xem đầy đủ.</div>
+      `
+    };
+  }
+
   return {
     title: "Garden Atlas", sub: `${STATS.unlockedPlants}/${STATS.totalPlants} loài`,
     body: `
@@ -304,6 +344,31 @@ function moodStatsCard() {
 /* ---- 5. Timeline ---- */
 const RANK = { legendary: 4, epic: 3, rare: 2, common: 1 };
 function scTimeline() {
+  // Locked state trước Goal 3 — "locked but informative"
+  if (!state.goals.g3) {
+    const done = Math.min(3, STATS.totalMemories + state.newMemCount);
+    const rem = Math.max(0, 3 - done);
+    return {
+      title: "Timeline", sub: "Dòng thời gian ký ức",
+      body: `
+      <div class="empty-state" style="padding-top:32px">
+        <div style="font-size:60px">🔒</div>
+        <div style="font-family:var(--font-display);font-size:18px;font-weight:800;margin:14px 0 8px">Timeline chưa mở</div>
+        <p style="color:var(--text-dim);font-size:14px;line-height:1.6;margin:0 20px 16px">
+          Hoàn thành <b>3 Memories Starter Quest</b> để xem lại hành trình ký ức của bạn.
+        </p>
+        <div class="bar" style="max-width:200px;margin:0 auto 8px">
+          <span style="width:${Math.round((done/3)*100)}%"></span>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:20px">
+          ${done}/3 kỷ niệm${rem > 0 ? ` · còn ${rem} để mở` : " · sắp xong!"}
+        </div>
+        <button class="btn" data-act="create" style="max-width:220px">🌱 Thêm kỷ niệm</button>
+        <div class="hint" style="margin-top:16px">Sau khi mở, bạn có thể xem theo Tháng, Năm hoặc Hành trình cuộc đời.</div>
+      </div>`
+    };
+  }
+
   const seg = `<div class="segment" style="margin-bottom:14px">
     ${["month", "year", "life"].map((v) =>
       `<button class="${state.tlView === v ? "active" : ""}" data-act="tlView" data-id="${v}">
@@ -387,17 +452,21 @@ function scCreate() {
     `<button class="chip mood-chip ${state.createMood === mo.id ? "active" : ""}" data-act="createMood" data-id="${mo.id}">
       ${mo.emoji} ${mo.name}</button>`).join("");
 
-  // chế độ sửa: prefill tiêu đề từ memory đang chọn
   const editM = state.editing ? MEMORIES.find((x) => x.id === state.selMemory) : null;
   const editBanner = state.editing
     ? `<div class="edit-banner">✏️ Đang sửa kỷ niệm — thay đổi sẽ ghi đè bản cũ.</div>` : "";
   const titleVal = editM ? editM.title.replace(/"/g, "&quot;") : "";
 
+  // Simplified form trước Goal 2: ảnh tùy chọn + title + mood + category gợi ý.
+  // Full form sau Goal 2: thêm gallery-seed, sub-type, mô tả, tags.
+  const isSimple = !state.goals.g2 && !state.editing;
+
   return {
     title: state.editing ? "Sửa Memory" : "New Memory",
-    sub: state.editing ? "Cập nhật khoảnh khắc" : "Ghi lại khoảnh khắc",
+    sub: state.editing ? "Cập nhật khoảnh khắc" : (isSimple ? "Ghi nhanh kỷ niệm" : "Ghi lại khoảnh khắc"),
     body: `
     ${editBanner}
+    ${!isSimple ? `
     <div class="section-title" style="margin-top:6px">📸 Gợi ý từ thư viện ảnh</div>
     <div class="gallery-strip">
       ${["🏖️","🌅","🍰","🐶","🎡","🌃"].map((g, i) =>
@@ -405,25 +474,29 @@ function scCreate() {
     </div>
     <div id="aiResult" class="ai-result" style="display:none"></div>
     <div class="hint" style="margin:0 0 14px">Gallery-seeded: chọn 1 ảnh → AI tự điền date + category. 1 tap là xong.</div>
+    ` : ""}
 
     <div class="field">
       <div class="photo-drop" data-act="photo">
-        <div><div class="big" id="photoIcon">🖼️</div><div>Thêm ảnh kỷ niệm</div></div>
+        <div><div class="big" id="photoIcon">🖼️</div>
+          <div>${isSimple ? "Thêm ảnh (tùy chọn)" : "Thêm ảnh kỷ niệm"}</div></div>
       </div>
     </div>
     <div class="field"><label>Tiêu đề</label>
-      <input id="memTitle" placeholder="VD: Cà phê sớm ở Đà Lạt" value="${titleVal}"></div>
-    <div class="field"><label>Category</label>
-      <div class="chips" style="overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px">${catChips}</div></div>
-    <div class="field"><label>Loại</label><div class="chips">${subChips}</div></div>
+      <input id="memTitle" placeholder="${isSimple ? "Hôm nay có gì vui?" : "VD: Cà phê sớm ở Đà Lạt"}" value="${titleVal}"></div>
     <div class="field"><label>Tâm trạng</label>
       <div class="chips" style="overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px">${moodChips}</div></div>
+    <div class="field"><label>Category</label>
+      <div class="chips" style="overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px">${catChips}</div></div>
+    ${!isSimple ? `
+    <div class="field"><label>Loại</label><div class="chips">${subChips}</div></div>
     <div class="field"><label>Mô tả (tùy chọn)</label>
       <textarea placeholder="Hôm nay có gì đáng nhớ...">${editM ? editM.desc : ""}</textarea></div>
     <div class="field"><label>Tags (tùy chọn)</label>
       <input placeholder="#travel #coffee"></div>
+    ` : ""}
 
-    <button class="btn" data-act="saveMemory">${state.editing ? "💾 Lưu thay đổi" : "🌱 Lưu & gieo hạt"}</button>
+    <button class="btn" data-act="saveMemory" style="margin-top:8px">${state.editing ? "💾 Lưu thay đổi" : "🌱 Lưu & gieo hạt"}</button>
     <div class="hint">${state.editing
       ? "Sửa xong sẽ quay lại kỷ niệm — cây đã nở không bị mất."
       : "First Bloom Guarantee: memory đầu tiên luôn nở ra 1 cây đặc biệt 🌺"}</div>
@@ -442,6 +515,7 @@ function scMore() {
     { act: "pro",        emoji: "👑", t: "Lifetime Pro", d: "Unlimited · Backup · Premium widgets" },
     { act: "backup",     emoji: "💾", t: "Backup & Restore", d: `Sao lưu lần cuối: ${BACKUP.lastDays} ngày trước · Local-first` },
     { act: "replayOnb",  emoji: "🚀", t: "Xem lại Onboarding", d: "Chạy lại trải nghiệm gieo mầm" },
+    { act: "demoUnlock", emoji: "🎯", t: "Demo: Mở tất cả", d: `Progressive unlock demo · Goals: ${Object.values(state.goals).filter(Boolean).length}/3` },
   ];
   return {
     title: "More", sub: "Tính năng & cài đặt",
@@ -899,6 +973,22 @@ function playRecap() {
   </div>`, "recap-overlay");
 }
 
+/* Goal 3 Unlock — Timeline mở: celebrate + offer navigate */
+function playTimelineUnlock() {
+  openFx(`<div class="confirm-box" style="text-align:center;padding:28px 20px">
+    <div style="font-size:64px;margin-bottom:10px">🎉</div>
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:10px">Timeline đã mở!</div>
+    <p style="color:var(--text-dim);font-size:14px;line-height:1.6;margin-bottom:18px">
+      Bạn đã hoàn thành <b>3 Memories Starter Quest</b> 🌱<br>
+      Giờ có thể xem lại hành trình ký ức của mình.
+    </p>
+    <div class="fx-actions" style="flex-direction:column;gap:8px">
+      <button class="btn" data-act="unlockTimeline">🕰️ Xem Timeline ngay</button>
+      <button class="btn secondary" data-act="closeFx">Về Garden</button>
+    </div>
+  </div>`, "confirm-overlay");
+}
+
 /* Quick-capture — bottom sheet rút gọn: 1 ảnh + 1 dòng. */
 function playQuickCapture() {
   openFx(`<div class="qc-sheet">
@@ -1146,7 +1236,10 @@ function onbApplyFirstBloom() {
 }
 
 function startOnboarding() {
-  onboard.active = true; onboard.step = 0;
+  onboard.active = true; onboard.step = 0; onboard.applied = false;
+  // reset progressive unlock để replay lại flow từ đầu (demo/mockup)
+  state.goals = { g1: false, g2: false, g3: false };
+  state.newMemCount = 0;
   renderOnboarding();
 }
 function endOnboarding(toGarden) {
@@ -1259,7 +1352,16 @@ function handleAct(act, ds) {
     case "reward":     toast("🎁 +1 Mystery Seed! (rewarded ad)"); break;
     case "saveMemory":
       if (state.editing) { state.editing = false; toast("💾 Đã lưu thay đổi"); go("memory"); }
-      else { go("garden"); setTimeout(playBloom, 150); }
+      else {
+        state.newMemCount++;
+        if (state.goals.g1 && !state.goals.g2) state.goals.g2 = true; // Goal 2: memory đầu tiên ngoài onboarding
+        if (state.goals.g2 && !state.goals.g3 && state.newMemCount >= 2) {
+          state.goals.g3 = true; // Goal 3: đủ 3 memories → mở Timeline
+          go("garden"); setTimeout(playTimelineUnlock, 200);
+        } else {
+          go("garden"); setTimeout(playBloom, 150);
+        }
+      }
       break;
     case "gallerySeed": {
       const seed = GALLERY_SEED[ds.emo];
@@ -1309,7 +1411,16 @@ function handleAct(act, ds) {
     case "shareRecap":  closeFx(); toast("📤 Mở chia sẻ recap"); break;
     case "quickCapture": playQuickCapture(); break;
     case "qcPick":      toast(`📷 Chọn ${ds.emo}`); break;
-    case "qcSave":      closeFx(); toast("🌱 Đã gieo nhanh 1 kỷ niệm"); go("garden"); break;
+    case "qcSave":
+      state.newMemCount++;
+      if (state.goals.g1 && !state.goals.g2) state.goals.g2 = true;
+      if (state.goals.g2 && !state.goals.g3 && state.newMemCount >= 2) {
+        state.goals.g3 = true;
+        closeFx(); go("garden"); setTimeout(playTimelineUnlock, 200);
+      } else {
+        closeFx(); toast("🌱 Đã gieo nhanh 1 kỷ niệm"); go("garden");
+      }
+      break;
     case "catch":       playCatch(ds.id || state.selPlant); break;
     case "closeFx":     closeFx(); break;
     case "closeBloom":
@@ -1321,13 +1432,15 @@ function handleAct(act, ds) {
     case "onbStyle":  setTheme(ds.id); renderOnboarding(); break;
     case "onbMood":   onboard.seedEmoji = ds.emo; onboard.seedCat = ds.cat; renderOnboarding(); break;
     case "onbPlant":  onboard.step = 3; renderOnboarding(); break;
-    case "onbSkip":   endOnboarding(true); toast("Có thể xem lại phần giới thiệu ở More."); break;
-    case "onbFinish": onbApplyFirstBloom(); endOnboarding(true); toast("🌿 Chào mừng đến khu vườn của bạn!"); break;
+    case "onbSkip":   state.goals.g1 = true; endOnboarding(true); toast("Có thể xem lại phần giới thiệu ở More."); break;
+    case "onbFinish": onbApplyFirstBloom(); state.goals.g1 = true; endOnboarding(true); toast("🌿 Chào mừng đến khu vườn của bạn!"); break;
     case "replayOnb": startOnboarding(); break;
     // coach guide
     case "coachNext":   coach.i++; renderCoachStep(); break;
     case "coachSkip":   endCoach(); break;
     case "coachReplay": coach.seen = false; state.editing = false; go("garden"); startCoach(); break;
+    case "unlockTimeline": closeFx(); go("timeline"); break;
+    case "demoUnlock": state.goals = {g1:true, g2:true, g3:true}; toast("🎯 Demo: đã mở tất cả tính năng"); render(); break;
     // navigation-style acts
     case "garden": case "atlas": case "timeline": case "create":
     case "more": case "categories": case "milestones": case "widgets":
@@ -1351,9 +1464,18 @@ function init() {
   if (gear) gear.addEventListener("click", () => { state.editing = false; go("settings"); });
 
   // bottom nav (tap FAB Create = memory mới → thoát chế độ sửa)
+  // Timeline locked before Goal 3 → show tip thay vì navigate
   el("#nav").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-nav]");
-    if (btn) { state.editing = false; go(btn.dataset.nav); }
+    if (!btn) return;
+    const target = btn.dataset.nav;
+    if (target === "timeline" && !state.goals.g3) {
+      const done = Math.min(3, STATS.totalMemories + state.newMemCount);
+      const rem = Math.max(0, 3 - done);
+      toast(`🔒 Mở sau khi hoàn thành 3 Memories Quest · còn ${rem} kỷ niệm`);
+      return;
+    }
+    state.editing = false; go(target);
   });
 
   // back button

@@ -4,6 +4,9 @@
 > Nguồn sự thật sản phẩm: [base/Memory Garden.md](../base/Memory%20Garden.md) · mùa: [.planning/SEASON_SYSTEM.md](SEASON_SYSTEM.md) · onboarding: [.planning/ONBOARDING.md](ONBOARDING.md) · UX đã validate qua mockup: [brainstorm/mockups/](../brainstorm/mockups/).
 > Data shape mockup ([js/data.js](../brainstorm/mockups/js/data.js)) = chuẩn để map sang Room entities.
 > Asset cần chuẩn bị (icon, sprite cây, animation, audio): [.planning/ASSET_SPEC.md](ASSET_SPEC.md).
+> Flow MVP cuối cùng: [.planning/UX_REVIEW_MVP.md](UX_REVIEW_MVP.md) · screen spec ngắn: [.planning/MVP_SCREEN_SPEC.md](MVP_SCREEN_SPEC.md) · checklist triển khai: [.planning/IMPLEMENTATION_CHECKLIST.md](IMPLEMENTATION_CHECKLIST.md)
+> Logic gating chi tiết: [.planning/USER_FLOW_STATE_MACHINE.md](USER_FLOW_STATE_MACHINE.md) · copy UI chuẩn: [.planning/COPYWRITING_PACK.md](COPYWRITING_PACK.md)
+> Task breakdown theo phase: [.planning/PHASE_TASK_BREAKDOWN.md](PHASE_TASK_BREAKDOWN.md)
 
 ---
 
@@ -15,6 +18,9 @@
 4. **First Bloom Guarantee** — memory ĐẦU TIÊN luôn nở Rare Bloom, miễn nhiễm mùa. Đây là aha-moment, không được phá.
 5. **Seasonal-exclusive plants KHÔNG tính vào 100% core completion** — tránh time-gate completionist.
 6. **2 theme song song** — Cozy (pastel, bo tròn) ↔ Pixel (retro, viền đậm). Mọi UI dùng design token, không hardcode màu/radius.
+7. **Activation trước, retention sau** — trước `3 Memories Starter Quest`, ưu tiên chỉ mở Garden / Create / Atlas preview-core và chỉ báo khóa `Timeline`.
+8. **Locked but informative** — feature/tab chưa mở phải có trạng thái khóa có hướng dẫn ngắn + progress, không để user mù về phần thưởng kế tiếp.
+9. **Save phải trả reward ngay** — sau create/save memory, effect mặc định là quay về `Garden` và highlight cây vừa trồng.
 
 ---
 
@@ -263,20 +269,32 @@ Screen: `collectAsStateWithLifecycle()` cho state; `LaunchedEffect` collect effe
 
 ## 7. Đặc tả màn hình (8 màn + overlay)
 
-Bottom nav 5 tab: **Garden · Atlas · ＋ (Create/Quick-capture) · Timeline · More**. (More → Milestones, Settings, Customization, Backup.)
+Bottom nav logic theo progressive unlock:
+- Trước Goal 3: **Garden · Atlas · ＋ (Create/Quick-capture) · Timeline(locked)**. Settings đi từ app bar hoặc entry gọn.
+- Sau Goal 3: mở đầy đủ **Garden · Atlas · ＋ · Timeline · More**.
+- `Timeline` dùng kiểu **locked but informative** trước khi unlock.
 
 ### 7.1 Garden (Home) — màn lõi aha
 - **Hiển thị:** grid ô đất (`GardenPlotEntity`); mỗi ô = `PlantSprite` theo stage; ô trống = "tap to plant". `ProgressRing` mục tiêu vườn. `SeasonBanner` + `ParticleOverlay` + season glow ambient. Banner nhắc backup (dismissible). 3-Memory Starter Quest progress.
 - **FAB ＋** → Create Memory. Quick-capture = long-press / nút phụ → `QuickCaptureSheet` (1 ảnh + 1 dòng).
 - **Coach overlay** (lần đầu sau onboarding): spotlight 3 bước (ô đất → nút + → mục tiêu vườn). Guard `coachSeen`. Replay qua "💡 Xem hướng dẫn".
+- **Gating UI theo goal:**
+  - Goal 1: chỉ vườn + CTA `Thêm kỷ niệm` + quest + Atlas preview nhẹ
+  - Goal 2: thêm milestone gần nhất + quick-capture entry + progress rõ hơn
+  - Goal 3: mới mở backup reminder / share shortcut / seasonal hook sâu hơn
 - **State:** `plots, season, goalProgress, questProgress, backupReminderVisible, coachStep`.
 - **Intent:** `TapPlot, TapEmptyPlot, OpenCreate, QuickCapture, DismissBackup, CoachNext/Skip/Replay`.
 - **Effect:** `NavigateCreate, NavigatePlantDetail, PlayGrowthAnim`.
 
 ### 7.2 Create / Edit Memory
-- Form: ảnh (gallery picker → URI), title, description, category + sub (chip), mood chips (6), tags. Nút Lưu.
+- Trước Goal 3, form mặc định là **minimal create**:
+  - title hoặc 1 dòng mô tả
+  - mood chips
+  - category gợi ý
+  - ảnh là tùy chọn, không bắt buộc
+- Sau Goal 3 mới mở dần tags/metadata nâng cao.
 - Edit: prefill từ `memoryId`. Delete: confirm 2 bước.
-- **Lưu** → `CreateMemoryUseCase` → effect `PlayBloomBurst(plant, rarity)` → về Garden, ô mới `isFresh`.
+- **Lưu** → `CreateMemoryUseCase` → effect `PlayBloomBurst(plant, rarity)` → **về Garden**, ô mới `isFresh`.
 - Gallery-seed (activation phase): EXIF date/location + ML Kit label → prefill category/title + dòng "AI nhận diện".
 
 ### 7.3 Atlas / Collection (Pokédex)
@@ -284,6 +302,10 @@ Bottom nav 5 tab: **Garden · Atlas · ＋ (Create/Quick-capture) · Timeline ·
 - Progress overall (`ProgressRing`) + progress theo category + progress seasonal riêng.
 - `NativeAdSlot` chèn giữa grid.
 - Tap ô unlocked → Plant Detail. Tap locked → hint (hoặc demo `CatchReveal`).
+- **Gating UI theo goal:**
+  - Goal 1: preview nhẹ, chỉ vài ô đầu + progress ngắn
+  - Goal 2: mở core đầy đủ + progress category + locked hint
+  - Goal 3: mới mở filter sâu và seasonal detail dày hơn
 
 ### 7.4 Plant Detail
 - Sprite lớn theo stage, tên, dex#, rarity, category, "Nở rộ mùa X · bloom [variant]". Liên kết memory gốc.
@@ -292,6 +314,8 @@ Bottom nav 5 tab: **Garden · Atlas · ＋ (Create/Quick-capture) · Timeline ·
 ### 7.5 Timeline
 - 3 tab: **Năm / Tháng / Hành trình cuộc đời**. Group memory theo thời gian.
 - Năm: card "Tâm trạng năm nay" (mood distribution). Tháng: `recapCard` "AI Memory Recap — Sắp ra mắt" (Phase 2 stub). Life Journey: derive từ memories rare+ + milestones done.
+- **Trước Goal 3:** không cho vào screen nội dung thật; thay bằng `locked informative state` với điều kiện mở + progress hiện tại.
+- **Sau Goal 3:** mở Month/Year trước; Life Journey có thể degrade gracefully nếu data còn ít.
 
 ### 7.6 Milestones
 - Grid huy hiệu (`MILESTONES`): emoji, tên, desc, progress bar, trạng thái done. First Memory / 10 / 100 / First Trip / First Date / Collector / Rare Hunter.
@@ -303,6 +327,10 @@ Bottom nav 5 tab: **Garden · Atlas · ＋ (Create/Quick-capture) · Timeline ·
 3. Dữ liệu & Quyền riêng tư — Export/Import ZIP, → Backup, dung lượng, **Xóa toàn bộ dữ liệu** (danger, 2 bước).
 4. Tiện ích & Thông báo — nhắc ghi chép hàng ngày, Widgets.
 5. Chung & Hỗ trợ — Ngôn ngữ vi/en, Về app, Phản hồi, Xem lại Onboarding.
+- **Gating UI theo goal:**
+  - Goal 1: Theme, Language, Hemisphere, Replay onboarding
+  - Goal 2: có thể thêm reminder cơ bản + particle FX
+  - Goal 3: mới mở Backup/Restore, storage info, support, danger zone
 
 ### 7.8 Customization
 Theme packs (Spring Meadow free, còn lại IAP $2.99) + Decorations (Fountain, Lantern, Sakura Set, Love Set...). Owned vs locked → trigger Billing.
@@ -354,12 +382,12 @@ Render card từ Composable → Bitmap (palette theo mùa + watermark "Memory Ga
 
 ### Phase 2 — Core loop (Memory → Garden → Atlas)
 **Mục tiêu:** đường sống chính của app.
-- **Create/Edit Memory** screen + VM (gallery picker, category/sub/mood/tags).
+- **Create/Edit Memory** screen + VM, nhưng default flow phải là **minimal create** (không ép ảnh).
 - **Garden** screen + VM (plots, progress ring, plant sprite theo stage).
-- **Atlas** screen + VM (grid, dex#, silhouette, completion, category progress).
+- **Atlas** screen + VM (preview ở Goal 1, core ở Goal 2).
 - **Plant Detail** + VM.
 - Animation: `GrowthAnim` + `BloomBurst` khi tạo memory.
-- **Done khi:** tạo memory → cây mọc trong Garden → unlock ô Atlas → mở Plant Detail. Loop đóng.
+- **Done khi:** tạo memory → quay về Garden → thấy cây mọc/highlight → unlock ô Atlas → mở Plant Detail. Loop đóng.
 
 ### Phase 3 — Activation (Onboarding + First Bloom + Quest)
 **Mục tiêu:** funnel `Install → First Memory → First Bloom → D1`.
@@ -368,7 +396,8 @@ Render card từ Composable → Bitmap (palette theo mùa + watermark "Memory Ga
 - Gallery-seeded first memory (EXIF + ML Kit).
 - 3-Memory Starter Quest (Garden) + Quick-capture sheet.
 - Coach overlay sau onboarding (3 bước spotlight) + guard `coachSeen`.
-- **Done khi:** lần mở đầu → onboarding → cây hiếm nở → đáp Garden có cây thật + coach guide.
+- Timeline locked state + unlock progress.
+- **Done khi:** lần mở đầu → onboarding → cây hiếm nở → đáp Garden có cây thật + coach guide → user biết Timeline tồn tại và biết cách mở.
 
 ### Phase 4 — Season System (retention layer)
 **Mục tiêu:** mùa ambient + bonus additive.

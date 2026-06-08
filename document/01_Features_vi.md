@@ -7,6 +7,26 @@
 
 **Memory Garden** biến những kỷ niệm trong cuộc sống thành một khu vườn số đang sống và lớn lên. Mỗi kỷ niệm bạn lưu sẽ trồng một cây mới, mở khóa một bông hoa mới, làm khu vườn ngày càng phong phú — để kỷ niệm được nở hoa thay vì bị quên trong một danh sách.
 
+Ứng dụng dùng cơ chế **mở tính năng dần theo tiến độ**: lúc mới vào chỉ hiện các chức năng cốt lõi, sau khi bạn hoàn thành vài goal đầu tiên thì các phần như Timeline, chia sẻ, nhắc sao lưu và lớp retention khác mới mở dần.
+
+## Lộ trình mở tính năng
+
+- **Goal 1** — Hoàn thành onboarding và thấy `First Bloom`
+  - Mở: Garden, Create bản tối giản, Atlas preview, Settings rút gọn
+  - Ẩn: Timeline, Share, Backup, Widgets, recap, seasonal monetization
+- **Goal 2** — Tạo thêm 1 kỷ niệm thật sau onboarding
+  - Mở thêm: Atlas đầy đủ, milestone cơ bản, quick-capture, reminder/particle cơ bản
+- **Goal 3** — Hoàn thành `3 Memories Starter Quest`
+  - Mở thêm: Timeline, Share / Memory Card, Backup & Restore, Widgets, Settings gần đầy đủ
+- **Sau Goal 3**
+  - Mở dần các lớp phụ như AI Recap preview, seasonal hook sâu hơn, các gợi ý retention nâng cao
+
+## Quy tắc hiển thị
+
+- Tab/màn chưa mở sẽ **ẩn hẳn**, không hiện icon khóa.
+- Tính năng phụ trong màn đã mở cũng có thể bị ẩn hoàn toàn ở giai đoạn đầu để tránh quá tải.
+- Sau mỗi goal, app sẽ có một khoảnh khắc reward ngắn để báo cho bạn biết đã mở thêm tính năng mới.
+
 ## Chức năng chính
 
 1. **Quản lý kỷ niệm** — Tạo, sửa, xóa kỷ niệm. Thêm ảnh, mô tả, category, tag và **tâm trạng (mood)**. **Ghi nhanh (Quick-capture)** cho phép lưu 1 ảnh + 1 dòng trong vài giây.
@@ -18,7 +38,7 @@
 7. **Widget** — Kỷ niệm gần nhất, Tiến độ khu vườn, và **Ngày này năm xưa**.
 8. **Tùy biến khu vườn** — Theme, trang trí, bố cục.
 9. **Hệ thống 4 mùa** — Xuân / Hạ / Thu / Đông theo lịch thực của thiết bị. Mùa chỉ cộng thêm bonus (không bao giờ chặn cây lớn): cây hợp mùa phát sáng, **+20% tỉ lệ hoa hiếm**, hoa đổi sắc theo mùa. Khu vườn đổi màu nền và hiệu ứng hạt (🌸/✨/🍂/❄️).
-10. **Onboarding & Kích hoạt** — Kỷ niệm đầu lấy từ thư viện ảnh (tự điền ngày/địa điểm từ ảnh), **Đảm bảo nở hoa đầu tiên** (kỷ niệm đầu luôn nở hoa hiếm), và **Nhiệm vụ 3 kỷ niệm đầu**.
+10. **Onboarding & Kích hoạt** — Onboarding **chọn nhanh, không cần nhập**: chạm mood hoặc preset kỷ niệm để gieo ký ức đầu tiên, **Đảm bảo nở hoa đầu tiên** (kỷ niệm đầu luôn nở hoa hiếm), và **Nhiệm vụ 3 kỷ niệm đầu**.
 11. **Chia sẻ / Memory Card** — Xuất thẻ ảnh đẹp cho một kỷ niệm hoặc cả khu vườn để chia sẻ lên mạng xã hội.
 
 ## Quyền riêng tư & dữ liệu

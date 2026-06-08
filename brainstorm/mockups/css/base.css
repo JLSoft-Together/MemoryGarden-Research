@@ -217,6 +217,9 @@ body {
   border: 3px solid var(--bg-elev);
 }
 .navitem.fab { color: var(--primary); }
+/* locked nav item — Timeline trước Goal 3 */
+.navitem.nav-locked { color: var(--text-dim); opacity: .5; pointer-events: auto; }
+.navitem.nav-locked .ico { filter: grayscale(1); }
 
 /* ---------- Buttons ---------- */
 .btn {

@@ -48,6 +48,12 @@ brainstorm/mockups/
 - [x] **Settings (Cài đặt)** — màn riêng 5 nhóm (Gói · Giao diện/Mùa · Dữ liệu · Thông báo · Chung). Vào từ More › Cài đặt + gear ⚙️ appbar.
 - [x] **Activation & Retention add-ons** — Mood Tracker · Social Share card · AI Recap (preview/Phase 2) · Backup reminder + màn Backup · 3-Memory Starter Quest · Quick-capture · Pokédex dex# + catch animation · Season glow toàn màn · Timeline Life-Journey động · wire edit/delete/gallery-seed.
 - [x] **Coach guide (Garden first-entry)** — spotlight overlay 3 bước: ô đất trống → nút + thêm kỷ niệm → mục tiêu vườn. Auto bật sau onboarding; link "💡 Xem hướng dẫn" ở Garden để replay.
+- [x] **Final MVP Flow locked** — chốt flow `Goal 0 -> Goal 3`, Create ưu tiên nhanh nhất không ép ảnh, success trả về Garden, `Timeline` unlock sau `3 Memories Starter Quest`, tab khóa dùng kiểu `locked but informative`. Chi tiết: `.planning/UX_REVIEW_MVP.md`
+- [x] **MVP Screen Spec** — bản `screen-by-screen spec` ngắn cho dev/design. File: `.planning/MVP_SCREEN_SPEC.md`
+- [x] **Implementation Checklist** — checklist triển khai mockup/Compose theo flow đã chốt. File: `.planning/IMPLEMENTATION_CHECKLIST.md`
+- [x] **User Flow + State Machine** — logic gating/unlock theo `Goal 0 -> Goal 3` cho dev. File: `.planning/USER_FLOW_STATE_MACHINE.md`
+- [x] **Copywriting Pack** — bộ copy ngắn thống nhất cho onboarding/Garden/Create/Timeline locked/unlock. File: `.planning/COPYWRITING_PACK.md`
+- [x] **Phase Task Breakdown** — backlog triển khai theo phase, có dependency, output và definition of done. File: `.planning/PHASE_TASK_BREAKDOWN.md`
 
 ## Spec code Android (Compose)
 - **Spec đầy đủ:** `.planning/COMPOSE_SPEC.md` — kiến trúc MVI, data/domain layer, 8 màn + overlay, design system Cozy/Pixel (token+Modifier, KHÔNG dùng Styles API alpha — để dành post-MVP), engine mùa + growth, chia **9 phase** (Phase 0 nền tảng → Phase 8 release).
@@ -60,6 +66,74 @@ brainstorm/mockups/
 - Repo research, KHÔNG có code Android (Kotlin) → bỏ qua android-code-indexer / bug-pool.
 - Activation funnel (brainstorm doc): Garden Home + Atlas + Create Memory + First
   Bloom là lõi aha moment — ưu tiên polish 4 màn này.
+- **Quyết định UX chốt (2026-06-08): Progressive Unlock** — khi user mới vào và **chưa hoàn thành 3 goal đầu**,
+  app sẽ **ẩn bớt tính năng** để tránh quá tải. Feature mở dần theo tiến độ như game unlock level mới.
+- **Quyết định UX chốt (2026-06-08): Locked but informative** — với tab/feature chưa mở, không ẩn hoàn toàn trong mọi trường hợp; ưu tiên hiện trạng thái khóa có hướng dẫn ngắn và progress mở khóa, đặc biệt cho `Timeline`.
+- **Lưu ý planning hiện tại:** mới sync tài liệu/spec/checklist. **Chưa code mockup** theo flow mới ở `brainstorm/mockups/`.
+
+## Progressive Unlock — mở tính năng dần
+- **Mục tiêu:** giảm overload lúc đầu, giữ user tập trung vào core loop `Create -> Bloom -> Unlock`.
+- **Nguyên tắc:** không xóa feature khỏi sản phẩm; chỉ trì hoãn thời điểm hiển thị cho đến khi user sẵn sàng.
+- **Định nghĩa tạm cho 3 goal đầu:**
+  1. Hoàn thành onboarding + thấy first bloom
+  2. Tạo thêm 1 memory ngoài onboarding
+  3. Hoàn thành mốc `3 Memories Starter Quest`
+- **Trước khi đủ 3 goal:** chỉ ưu tiên hiển thị Garden, Create, tiến độ cơ bản, quest, và Atlas ở mức tối thiểu.
+- **Sau mỗi goal:** mở thêm 1 lớp giá trị mới để tạo cảm giác "lên level".
+- **Feature nên ẩn lúc đầu:** Timeline nâng cao, Widget hook, Share card, AI Recap preview, Backup reminder, Settings sâu, seasonal upsell/monetization.
+- **Feature nên mở sớm:** Add Memory, Garden progress, First Bloom, Atlas unlock, milestone gần nhất.
+- **Lưu ý UX:** mục đã khóa có thể `ẩn hẳn` hoặc hiện `coming soon / mở ở goal tiếp theo`; ưu tiên MVP là **ẩn hẳn** để màn sạch hơn.
+
+### Gợi ý lộ trình unlock MVP
+- **Goal 0-1:** Garden + nút Thêm kỷ niệm + quest + Atlas preview cơ bản.
+- **Goal 2:** mở Atlas đầy đủ + milestone cơ bản + quick-capture.
+- **Goal 3:** mở Timeline, Share, Backup reminder, Settings đầy đủ hơn.
+- **Sau Goal 3:** mới bắt đầu đẩy retention/phụ trợ như recap, widget, seasonal hook sâu hơn.
+
+### Bảng Goal -> Feature Unlock theo từng tab/màn
+
+| Tab/Màn | Goal 0: trước onboarding xong | Sau Goal 1 | Sau Goal 2 | Sau Goal 3 |
+|---|---|---|---|---|
+| Onboarding overlay | Hiện đầy đủ | Ẩn | Ẩn | Ẩn, chỉ còn replay |
+| Garden | Chưa vào | Mở | Mở | Mở |
+| Create | Chưa vào | Mở bản tối giản | Mở bản chuẩn | Mở đầy đủ |
+| Atlas | Chưa vào | Mở bản preview | Mở core đầy đủ | Mở filter/seasonal detail |
+| Timeline | Ẩn | Ẩn | Ẩn | Mở |
+| Settings | Ẩn | Mở bản rút gọn | Mở thêm phần cơ bản | Mở gần đầy đủ |
+| Share / Memory Card | Ẩn | Ẩn | Ẩn | Mở |
+| Backup / Restore | Ẩn | Ẩn | Ẩn | Mở |
+| Widgets / On This Day hook | Ẩn | Ẩn | Ẩn | Mở |
+| AI Recap preview | Ẩn | Ẩn | Ẩn | Mở sau Goal 3, ưu tiên thấp |
+| Season monetization / out-of-season upsell | Ẩn | Ẩn | Ẩn | Mở sau Goal 3, ưu tiên thấp |
+
+### Cụ thể theo màn
+- **Garden**
+  - Sau Goal 1: chỉ hiện vườn, CTA Thêm kỷ niệm, starter quest, progress rất cơ bản, coach guide.
+  - Sau Goal 2: hiện thêm milestone gần nhất, quick-capture entry, Atlas progress rõ hơn.
+  - Sau Goal 3: hiện thêm backup reminder, share shortcut, seasonal hook sâu hơn, card retention phụ.
+- **Create**
+  - Sau Goal 1: chỉ hiện form tối giản gồm ảnh, 1 dòng mô tả/title, mood, category gợi ý.
+  - Sau Goal 2: mở quick-capture thật sự, category rõ hơn, edit từ detail.
+  - Sau Goal 3: mở tag đầy đủ, metadata/phần nâng cao, nháp dang dở.
+- **Atlas**
+  - Sau Goal 1: chỉ hiện preview vài ô đầu, progress tổng ngắn gọn, cây mới mở được highlight.
+  - Sau Goal 2: mở grid đầy đủ, progress theo category, locked hint, catch animation.
+  - Sau Goal 3: mở filter `all/unlocked/locked/category/season`, plant detail sâu hơn, seasonal badge rõ hơn.
+- **Timeline**
+  - Trước Goal 3: ẩn hoàn toàn.
+  - Sau Goal 3: mở Month/Year, memory detail reopen, card scan nhanh; Life Journey sâu để sau.
+- **Settings**
+  - Sau Goal 1: chỉ hiện theme nhanh, language, hemisphere, replay onboarding.
+  - Sau Goal 2: mở thêm reminder cơ bản, particle FX.
+  - Sau Goal 3: mở backup/restore, storage info, widget section, about/feedback, danger zone.
+
+### Quy tắc hiển thị
+- Tab/màn chưa mở sẽ **ẩn hẳn**, không hiện icon khóa ở bottom nav.
+- Feature phụ trong màn đã mở có thể ẩn hoàn toàn, không cần trạng thái `coming soon` ở MVP.
+- Sau mỗi goal cần có 1 khoảnh khắc reward ngắn:
+  - Goal 1 -> vào Garden
+  - Goal 2 -> gợi xem Atlas / milestone
+  - Goal 3 -> thông báo đã mở Timeline và các tính năng mới
 
 ## Bổ sung — Season System (4 mùa)
 - **Design đầy đủ:** `.planning/SEASON_SYSTEM.md` (mô hình, mechanics, monetization, MVP cut, risks).
@@ -69,7 +143,9 @@ brainstorm/mockups/
 
 ## Bổ sung — Onboarding ("trải nghiệm gieo mầm")
 - **Design đầy đủ:** `.planning/ONBOARDING.md`.
-- **Flow 5 bước (overlay):** Welcome (concept 5s) → Style (Cozy/Pixel) → Seed (chạm mood, tự gieo) →
+- **Quyết định UX chốt:** onboarding **chọn nhanh, không cần nhập**; mọi nhập chi tiết để sau ở màn Create.
+- **Vai trò trong unlock system:** onboarding chỉ mở core loop, chưa đẩy hết feature.
+- **Flow 5 bước (overlay):** Welcome (concept 5s) → Style (Cozy/Pixel) → Seed (chạm mood/chọn preset, app tự tạo memory mẫu) →
   First Bloom (animation + reward 🏆🎁) → Tour (Atlas/Season/Widget) → đáp xuống **Garden**.
 - **Payoff:** mở cây hiếm `p05` + lấp ô trống cuối vườn bằng cây "Mới 🌟" (guard `onboard.applied`).
 - **Mockup:** `js/app.js` (section ONBOARDING), `css/base.css` (section ONBOARDING + `.plot.fresh`),
@@ -101,6 +177,7 @@ brainstorm/mockups/
 - **Wire stub** — gallery-seed điền cat/sub/title + dòng "AI nhận diện"; edit memory (`state.editing`, prefill); delete có bước xác nhận (`confirmDelete()`).
 - **Fix kèm:** thêm delegation click trên `.phone` cho overlay (bloom/onboarding/fx) — trước đó nằm ngoài `#screenBody` nên không bắt được click.
 - **Mockup giữ depth visual/stub + toast** (không persist state nặng). Mở trực tiếp `index.html`.
+- **Áp dụng Progressive Unlock:** các add-on này không bung ra toàn bộ từ đầu; sẽ mở dần theo 3 goal đầu để giữ Garden sạch và tập trung.
 
 ## Bổ sung — Coach guide (highlight lần đầu vào Garden)
 

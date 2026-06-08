@@ -4,6 +4,7 @@
 > **Phạm vi:** Hệ thống 4 mùa ảnh hưởng tới phát triển cây + visual + collection.
 > **Trạng thái:** Đã dựng vào mockup (`brainstorm/mockups/`). Spec dùng cho Android Compose thật.
 > **Vai trò:** **Retention layer** (D7+ / comeback), KHÔNG phải activation. Không được làm hỏng aha-moment first-bloom.
+> **Sync flow MVP 2026-06-08:** trước `Goal 3`, season nên hiện kiểu ambient/additive; không được tranh hero với `Thêm kỷ niệm` trên Garden.
 
 ---
 
@@ -91,6 +92,9 @@ Mỗi mùa "ưu ái" 2 category (→ +rare% + glow), và mỗi category có "mù
 - **Plot glow** `☀️+` cho cây hợp mùa (additive).
 - **Atlas badge** mùa nở rộ góc ô + ribbon seasonal + dòng progress seasonal riêng.
 - **Plant detail**: "Nở rộ mùa X · bloom [variant]"; seasonal trái mùa → nút Out-of-season Seed.
+- **Gating theo flow MVP:**
+  - Goal 1-2: season chỉ nên là lớp không khí, không đẩy card seasonal/upsell lên hero
+  - Sau Goal 3: mới tăng hiện diện seasonal hook, share shortcut, retention card phụ
 
 ---
 
