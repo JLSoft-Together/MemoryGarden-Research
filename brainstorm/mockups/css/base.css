@@ -982,3 +982,46 @@ body {
 .danger-confirm .dc-sub { font-size: 11px; color: var(--text-dim); line-height: 1.5; margin: 6px 0 12px; }
 .danger-confirm .dc-actions { display: flex; gap: 10px; }
 .danger-confirm .dc-actions .btn { flex: 1; margin: 0; }
+
+/* ============================================================
+   COACH MARKS — spotlight hướng dẫn lần đầu vào Garden
+   Khoét sáng 1 element (box-shadow lan tối) + tooltip điều hướng.
+   ============================================================ */
+.coach {
+  position: absolute; inset: 0; z-index: 120;
+  animation: fadeUp .25s ease;
+}
+.coach-hole {
+  position: absolute;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(13, 15, 18, .74);   /* phủ tối phần còn lại */
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  pointer-events: none;
+  transition: left .3s ease, top .3s ease, width .3s ease, height .3s ease;
+}
+.coach-hole.round { border-radius: 50%; }
+.coach-tip {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 44px); max-width: 318px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 15px 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .38);
+  animation: fadeUp .3s ease;
+}
+.coach-dots { display: flex; gap: 6px; margin-bottom: 10px; }
+.coach-dots i {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border); transition: all .25s ease;
+}
+.coach-dots i.on { background: var(--primary); width: 20px; border-radius: 3px; }
+.coach-title { font-family: var(--font-display); font-weight: 800; font-size: 17px; color: var(--text); }
+.coach-text { font-size: 13px; line-height: 1.55; color: var(--text-dim); margin: 6px 0 14px; }
+.coach-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.coach-skip {
+  background: none; border: 0; color: var(--text-dim);
+  font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.coach-actions .btn.sm { flex: 0 0 auto; }
+/* link "Xem hướng dẫn" trong .hint (nằm ngoài .section-title) */
+.hint .link { color: var(--primary); font-weight: 700; cursor: pointer; white-space: nowrap; }

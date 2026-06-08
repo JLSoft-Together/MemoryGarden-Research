@@ -88,6 +88,7 @@ function renderNav() {
 
 function go(screen) {
   state.screen = screen;
+  if (screen !== "garden") { const c = el("#coach"); if (c) endCoach(); } // rời vườn → tắt coach
   render();
 }
 
@@ -197,7 +198,7 @@ function scGarden() {
     <div class="card">${MEMORIES.slice(0, 2).map(memRow).join("")}</div>
 
     <div class="hint">Mỗi memory bạn tạo sẽ gieo 1 hạt → lớn dần thành cây.
-      Tap ô trống để gieo memory mới.</div>
+      Tap ô trống để gieo memory mới. <span class="link" data-act="coachReplay">💡 Xem hướng dẫn</span></div>
     `,
   };
 }
@@ -1153,7 +1154,94 @@ function endOnboarding(toGarden) {
   onboard.active = false;
   const ov = el("#onboarding");
   if (ov) ov.remove();
-  if (toGarden) go("garden");
+  if (toGarden) {
+    go("garden");
+    if (!coach.seen) setTimeout(startCoach, 450); // vào vườn lần đầu → bật coach guide
+  }
+}
+
+/* ============================================================
+   COACH MARKS — hướng dẫn nhanh khi LẦN ĐẦU vào Garden.
+   Spotlight overlay: khoét sáng 1 element + tooltip. KHÔNG thuộc router.
+   Mục tiêu: user mới biết (1) vườn là gì, (2) cách thêm kỷ niệm, (3) mục tiêu.
+   ============================================================ */
+const coach = { i: 0, seen: false };
+const COACH_STEPS = [
+  { sel: ".plot.empty", pad: 8,
+    title: "Ô đất đang chờ 🌱",
+    text: "Đây là khu vườn của bạn. Mỗi kỷ niệm ghi lại sẽ mọc thành một cái cây — ô trống là chỗ cây mới được gieo." },
+  { sel: ".navitem.fab", pad: 10, round: true,
+    title: "Thêm kỷ niệm ở đây ➕",
+    text: "Chạm nút + để ghi một khoảnh khắc. Mỗi kỷ niệm là một hạt giống, gieo xuống rồi lớn dần thành cây." },
+  { sel: ".ring-wrap", pad: 8,
+    title: "Mục tiêu khu vườn 🎯",
+    text: "Sưu tầm đủ các loài cây để lấp đầy Atlas. Vòng tiến độ cho biết bạn đang ở đâu trên hành trình." },
+];
+
+function startCoach() {
+  coach.i = 0;
+  renderCoachStep();
+}
+
+function renderCoachStep() {
+  // bỏ qua step nào không tìm thấy target (vd vườn hết ô trống)
+  while (coach.i < COACH_STEPS.length && !el(COACH_STEPS[coach.i].sel)) coach.i++;
+  if (coach.i >= COACH_STEPS.length) { endCoach(); return; }
+
+  const step = COACH_STEPS[coach.i];
+  const target = el(step.sel);
+  const screen = el("#screenBody");
+  if (screen.contains(target)) target.scrollIntoView({ block: "center", inline: "nearest" });
+
+  // chờ scroll/layout xong (2 frame) rồi mới đo vị trí
+  requestAnimationFrame(() => requestAnimationFrame(() => paintCoach(step, target)));
+}
+
+function paintCoach(step, target) {
+  const phone = el(".phone");
+  const pr = phone.getBoundingClientRect();
+  const tr = target.getBoundingClientRect();
+  const scale = pr.width / phone.offsetWidth || 1;   // bù transform: scale() ở màn nhỏ
+  const pad = step.pad || 6;
+  const left = (tr.left - pr.left) / scale - pad;
+  const top  = (tr.top  - pr.top)  / scale - pad;
+  const w    = tr.width  / scale + pad * 2;
+  const h    = tr.height / scale + pad * 2;
+
+  let ov = el("#coach");
+  if (!ov) {
+    ov = document.createElement("div");
+    ov.id = "coach";
+    ov.className = "coach";
+    phone.appendChild(ov);
+  }
+
+  const last = coach.i === COACH_STEPS.length - 1;
+  const dots = COACH_STEPS.map((_, i) => `<i class="${i === coach.i ? "on" : ""}"></i>`).join("");
+
+  // tooltip: target nửa trên → đặt tip phía dưới; nửa dưới → đặt phía trên
+  const phoneH = phone.offsetHeight;
+  const below = (top + h / 2) < phoneH * 0.5;
+  const tipPos = below ? `top:${top + h + 12}px` : `bottom:${phoneH - top + 12}px`;
+
+  ov.innerHTML = `
+    <div class="coach-hole ${step.round ? "round" : ""}"
+         style="left:${left}px;top:${top}px;width:${w}px;height:${h}px"></div>
+    <div class="coach-tip" style="${tipPos}">
+      <div class="coach-dots">${dots}</div>
+      <div class="coach-title">${step.title}</div>
+      <div class="coach-text">${step.text}</div>
+      <div class="coach-actions">
+        <button class="coach-skip" data-act="coachSkip">Bỏ qua</button>
+        <button class="btn sm" data-act="coachNext">${last ? "Bắt đầu thôi 🌿" : "Tiếp ›"}</button>
+      </div>
+    </div>`;
+}
+
+function endCoach() {
+  coach.seen = true;
+  const ov = el("#coach");
+  if (ov) ov.remove();
 }
 
 /* ============================================================
@@ -1236,6 +1324,10 @@ function handleAct(act, ds) {
     case "onbSkip":   endOnboarding(true); toast("Có thể xem lại phần giới thiệu ở More."); break;
     case "onbFinish": onbApplyFirstBloom(); endOnboarding(true); toast("🌿 Chào mừng đến khu vườn của bạn!"); break;
     case "replayOnb": startOnboarding(); break;
+    // coach guide
+    case "coachNext":   coach.i++; renderCoachStep(); break;
+    case "coachSkip":   endCoach(); break;
+    case "coachReplay": coach.seen = false; state.editing = false; go("garden"); startCoach(); break;
     // navigation-style acts
     case "garden": case "atlas": case "timeline": case "create":
     case "more": case "categories": case "milestones": case "widgets":
@@ -1280,7 +1372,7 @@ function init() {
   // delegated cho OVERLAY (bloom / onboarding / fx) — chúng nằm ngoài #screenBody
   // nên không được listener trên bắt. Scope chặt để không double-fire với screen body.
   el(".phone").addEventListener("click", (e) => {
-    if (!e.target.closest(".bloom-overlay, #onboarding, .fx-overlay")) return;
+    if (!e.target.closest(".bloom-overlay, #onboarding, .fx-overlay, #coach")) return;
     const node = e.target.closest("[data-act]");
     if (node) handleAct(node.dataset.act, node.dataset);
   });

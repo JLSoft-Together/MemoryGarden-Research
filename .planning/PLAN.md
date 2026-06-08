@@ -47,6 +47,7 @@ brainstorm/mockups/
 - [x] **Onboarding** — overlay 5 bước "trải nghiệm gieo mầm" (data/app/css). Design: `.planning/ONBOARDING.md`
 - [x] **Settings (Cài đặt)** — màn riêng 5 nhóm (Gói · Giao diện/Mùa · Dữ liệu · Thông báo · Chung). Vào từ More › Cài đặt + gear ⚙️ appbar.
 - [x] **Activation & Retention add-ons** — Mood Tracker · Social Share card · AI Recap (preview/Phase 2) · Backup reminder + màn Backup · 3-Memory Starter Quest · Quick-capture · Pokédex dex# + catch animation · Season glow toàn màn · Timeline Life-Journey động · wire edit/delete/gallery-seed.
+- [x] **Coach guide (Garden first-entry)** — spotlight overlay 3 bước: ô đất trống → nút + thêm kỷ niệm → mục tiêu vườn. Auto bật sau onboarding; link "💡 Xem hướng dẫn" ở Garden để replay.
 
 ## Ghi chú
 - Repo research, KHÔNG có code Android (Kotlin) → bỏ qua android-code-indexer / bug-pool.
@@ -93,3 +94,14 @@ brainstorm/mockups/
 - **Wire stub** — gallery-seed điền cat/sub/title + dòng "AI nhận diện"; edit memory (`state.editing`, prefill); delete có bước xác nhận (`confirmDelete()`).
 - **Fix kèm:** thêm delegation click trên `.phone` cho overlay (bloom/onboarding/fx) — trước đó nằm ngoài `#screenBody` nên không bắt được click.
 - **Mockup giữ depth visual/stub + toast** (không persist state nặng). Mở trực tiếp `index.html`.
+
+## Bổ sung — Coach guide (highlight lần đầu vào Garden)
+
+- **Vấn đề:** user vừa qua onboarding, đáp xuống Garden nhưng chưa biết flow (thêm kỷ niệm ở đâu, mục tiêu trồng cây là gì).
+- **Giải pháp:** coachmark spotlight — khoét sáng 1 element + tooltip điều hướng (dots · Bỏ qua · Tiếp). 3 bước:
+  1. `.plot.empty` → "Ô đất đang chờ" (vườn là gì, ô trống = chỗ gieo cây).
+  2. `.navitem.fab` → "Thêm kỷ niệm" (chạm + để gieo hạt).
+  3. `.ring-wrap` → "Mục tiêu khu vườn" (sưu tầm đủ loài, lấp đầy Atlas).
+- **Trigger:** auto sau `endOnboarding(true)` lần đầu (`coach.seen` guard). Replay qua link **💡 Xem hướng dẫn** ở hint Garden (`coachReplay`).
+- **Kỹ thuật:** overlay con của `.phone` (z-index 120); `paintCoach()` đo rect target, bù `transform: scale()` màn nhỏ; `scrollIntoView` target trong vùng cuộn; step thiếu target tự bỏ qua. Rời Garden → `go()` tự `endCoach()`.
+- **Mockup:** `js/app.js` (section COACH MARKS + handleAct `coachNext/coachSkip/coachReplay` + delegation `#coach`), `css/base.css` (section COACH MARKS + `.hint .link`).
