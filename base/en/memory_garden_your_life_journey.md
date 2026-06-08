@@ -49,7 +49,7 @@ Instead of:
 The app is designed **Local-first** — data is stored entirely on the device.
 
 - **Storage:** Room Database · DataStore · Local Files
-- **Backup:** Export ZIP · Import ZIP
+- **Backup:** Export ZIP · Import ZIP · **Backup reminder** (nudge to Export ZIP — DataStore `lastBackupAt` + WorkManager) · **Manual Drive export** (optional, no auto cloud-sync)
 
 A backend is only considered in very distant phases (Couple Garden or Cloud Sync).
 
@@ -59,7 +59,7 @@ A backend is only considered in very distant phases (Couple Garden or Cloud Sync
 
 ### 1. Memory Management
 
-Create Memory · Edit Memory · Delete Memory · Add photo · Add description · Add category · Add tags
+Create Memory · Edit Memory · Delete Memory · Add photo · Add description · Add category · Add tags · **Mood** · **Quick-capture**
 
 ### 2. Garden System
 
@@ -67,7 +67,7 @@ Auto-generate plants from Memory · Seed system · Sprout · Plant · Bloom · R
 
 ### 3. Collection System
 
-List of unlocked plants · List of locked plants · Progress per category · Overall Completion
+List of unlocked plants · List of locked plants · Progress per category · Overall Completion · **Atlas/Pokédex framing** (dex number, slot silhouette, catch animation)
 
 ### 4. Categories
 
@@ -96,13 +96,23 @@ Example: First Memory · 10 Memories · 100 Memories · First Trip · First Date
 
 Theme · Decoration · Layout
 
+### 9. Onboarding & Activation
+
+"Plant a seed" onboarding (welcome → style → plant first memory → First Bloom → tour) · Gallery-seeded first memory (EXIF + ML Kit) · First Bloom Guarantee · 3-Memory Starter Quest · Quick-capture. Funnel: `Install → First Memory → First Bloom → empty catalog slot → D1`.
+
+### 10. Social Share / Memory Card
+
+Export a memory or the whole garden as a beautiful image card (season palette + watermark). Virality + **ASO** lever. Rendered on-device from Compose → Share Sheet, no server.
+
 ---
 
 ## MVP Scope (V1)
 
-**Required:** Memory CRUD · Category · Collection · Garden · 30-50 plant types · Native Ads · Rewarded Ads
+**Required:** Memory CRUD + Mood · Category · Collection (Atlas/Pokédex) · Garden · 30-50 plant types · Season glow · Onboarding & Activation (Gallery-seed + First Bloom + Starter Quest + Quick-capture) · Social Share · Backup reminder · Native Ads · Rewarded Ads
 
-**Not yet:** Cloud Sync · Account · Couple Garden · Family Garden · AI Features
+**Phase 2:** Seasonal-exclusive collection + Seasonal Event · Memory-date season · **AI Memory Recap** (monthly/yearly summaries)
+
+**Not yet:** Cloud Sync · Account · Couple Garden · Family Garden · Other AI Features (generative/chatbot)
 
 ---
 

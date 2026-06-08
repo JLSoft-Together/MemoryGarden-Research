@@ -49,7 +49,7 @@ Thay vì:
 Ứng dụng được thiết kế theo hướng **Local-first** — dữ liệu lưu hoàn toàn trên thiết bị.
 
 - **Storage:** Room Database · DataStore · Local Files
-- **Backup:** Export ZIP · Import ZIP
+- **Backup:** Export ZIP · Import ZIP · **Backup reminder** (nhắc Export ZIP — DataStore `lastBackupAt` + WorkManager) · **Drive export thủ công** (tuỳ chọn, không auto cloud-sync)
 
 Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc Cloud Sync).
 
@@ -59,7 +59,7 @@ Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc
 
 ### 1. Memory Management
 
-Tạo Memory · Chỉnh sửa Memory · Xóa Memory · Thêm ảnh · Thêm mô tả · Thêm category · Thêm tags
+Tạo Memory · Chỉnh sửa Memory · Xóa Memory · Thêm ảnh · Thêm mô tả · Thêm category · Thêm tags · **Mood (tâm trạng)** · **Quick-capture (ghi nhanh)**
 
 ### 2. Garden System
 
@@ -67,7 +67,7 @@ Tự động sinh cây từ Memory · Hệ thống Seed · Sprout · Plant · Bl
 
 ### 3. Collection System
 
-Danh sách cây đã mở khóa · Danh sách cây chưa mở khóa · Progress theo từng category · Overall Completion
+Danh sách cây đã mở khóa · Danh sách cây chưa mở khóa · Progress theo từng category · Overall Completion · **Atlas/Pokédex framing** (dex-number, slot silhouette, catch animation)
 
 ### 4. Categories
 
@@ -96,13 +96,23 @@ Ví dụ: First Memory · 10 Memories · 100 Memories · First Trip · First Dat
 
 Theme · Decoration · Layout
 
+### 9. Onboarding & Activation
+
+Onboarding "gieo mầm" (welcome → style → gieo kỷ niệm đầu → First Bloom → tour) · Gallery-seeded first memory (EXIF + ML Kit) · First Bloom Guarantee · 3-Memory Starter Quest · Quick-capture. Funnel: `Install → First Memory → First Bloom → Catalog slot trống → D1`.
+
+### 10. Social Share / Memory Card
+
+Xuất card ảnh cho 1 kỷ niệm hoặc cả khu vườn (palette theo mùa + watermark). Đòn bẩy virality + **ASO**. Render bitmap từ Compose → Share Sheet, không lưu server.
+
 ---
 
 ## MVP Scope (V1)
 
-**Bắt buộc:** Memory CRUD · Category · Collection · Garden · 30-50 loại cây · Native Ads · Rewarded Ads
+**Bắt buộc:** Memory CRUD + Mood · Category · Collection (Atlas/Pokédex) · Garden · 30-50 loại cây · Season glow · Onboarding & Activation (Gallery-seed + First Bloom + Starter Quest + Quick-capture) · Social Share · Backup reminder · Native Ads · Rewarded Ads
 
-**Chưa làm:** Cloud Sync · Account · Couple Garden · Family Garden · AI Features
+**Phase 2:** Seasonal-exclusive collection + Seasonal Event · Memory-date season · **AI Memory Recap** (tóm tắt tháng/năm)
+
+**Chưa làm:** Cloud Sync · Account · Couple Garden · Family Garden · AI Features khác (generative/chatbot)
 
 ---
 

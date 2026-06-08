@@ -86,9 +86,12 @@ data class Memory(
     val description: String,
     val categoryId: Int,
     val imagePath: String?,
+    val moodId: Int? = null,   // Mood Tracker — nullable, backward compatible
     val createdTime: Long
 )
 ```
+
+> **Backup state** (DataStore): `lastBackupAt: Long` + `autoRemindBackup: Boolean`. Dùng cho **backup reminder** (WorkManager/Glance nhắc Export ZIP khi đã lâu chưa sao lưu). Tuỳ chọn đẩy 1 bản ZIP lên Google Drive **thủ công** — không auto cloud-sync.
 
 ### Plant
 
@@ -233,10 +236,11 @@ Couple Garden. Tận dụng user từ Love Quote Story.
 - Dễ thêm IAP
 - Có Rewarded Ads tự nhiên
 
-**Rủi ro:**
-- ASO khó hơn Countdown App
-- User phải hiểu concept trong 5 giây đầu
-- Garden phải thật đẹp
+**Rủi ro & giảm thiểu:**
+- ASO khó hơn Countdown App → **Social Share / Memory Card** tạo virality
+- User phải hiểu concept trong 5 giây đầu → **Onboarding "gieo mầm"** + First Bloom Guarantee
+- Garden phải thật đẹp → ưu tiên visual + **season glow** + catch animation
+- Mất dữ liệu vì local-first → **backup reminder** (nhắc Export ZIP) + Drive export thủ công
 
 ---
 

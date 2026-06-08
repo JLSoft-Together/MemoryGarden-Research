@@ -113,6 +113,8 @@ Ví dụ:
 
 Người chơi dần mở khóa các cây hiếm khi tiếp tục ghi lại cuộc sống của mình.
 
+Bộ sưu tập trình bày kiểu **Atlas/Pokédex**: lưới ô cây, slot silhouette cho cây chưa mở, **số dex** mỗi loài, và **animation "sưu tầm"** khi mở khóa cây mới — biến việc lấp ô trống thành động lực sưu tầm.
+
 ### 📖 Dòng thời gian ký ức (Memory Timeline)
 
 Tự động dựng một dòng thời gian đẹp mắt cho các sự kiện cuộc đời.
@@ -174,6 +176,20 @@ Widget đẹp mắt thiết kế để truyền cảm hứng hằng ngày.
 - Hoa mới nở
 - Trạng thái bộ sưu tập
 
+### 🚀 Onboarding & Kích hoạt (Activation)
+
+Đưa người dùng tới khoảnh khắc "aha" thật nhanh.
+
+- **Onboarding "gieo mầm"**: welcome → chọn style → tự tay gieo kỷ niệm đầu → First Bloom → tour ngắn (~5 giây hiểu concept)
+- **Gallery-seeded first memory**: chọn 1 ảnh → EXIF + ML Kit tự điền ngày/địa điểm/category → 1 tap thành memory đầu
+- **First Bloom Guarantee**: kỷ niệm đầu luôn nở thành cây hiếm (miễn nhiễm mùa)
+- **3-Memory Starter Quest**: ghi 3 kỷ niệm đầu → mở huy hiệu
+- **Quick-capture**: ghi nhanh 1 ảnh + 1 dòng
+
+### 📤 Chia sẻ (Social Share / Memory Card)
+
+Xuất một kỷ niệm hoặc cả khu vườn thành **card ảnh đẹp** (đổi palette theo mùa, có watermark) để chia sẻ lên mạng xã hội — tăng nhận diện thương hiệu (ASO). Render ngay trên máy, không qua server.
+
 ### 🔒 Quyền riêng tư Local-First
 
 Memory Garden được thiết kế đề cao quyền riêng tư. Kỷ niệm người dùng được lưu cục bộ trên thiết bị.
@@ -196,6 +212,8 @@ Tính năng:
 - Sao lưu cục bộ
 - Xuất ra file
 - Nhập từ bản sao lưu
+- **Nhắc sao lưu** (backup reminder): nhắc Export ZIP khi đã lâu chưa sao lưu — khắc phục rủi ro mất dữ liệu của local-first
+- **Đẩy lên Google Drive thủ công** (tuỳ chọn): bản sao do người dùng chủ động tạo, không auto-sync, không cần tài khoản
 - Hỗ trợ đồng bộ đám mây trong tương lai
 
 ---

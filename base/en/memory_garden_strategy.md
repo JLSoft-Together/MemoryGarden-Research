@@ -86,9 +86,12 @@ data class Memory(
     val description: String,
     val categoryId: Int,
     val imagePath: String?,
+    val moodId: Int? = null,   // Mood Tracker — nullable, backward compatible
     val createdTime: Long
 )
 ```
+
+> **Backup state** (DataStore): `lastBackupAt: Long` + `autoRemindBackup: Boolean`. Powers the **backup reminder** (WorkManager/Glance nudges an Export ZIP when it has been a while). Optional **manual** Google Drive export — no auto cloud-sync.
 
 ### Plant
 
@@ -233,10 +236,11 @@ Couple Garden. Leverage users from Love Quote Story.
 - Easy to add IAP
 - Natural fit for Rewarded Ads
 
-**Risks:**
-- ASO is harder than a Countdown App
-- User must grasp the concept within the first 5 seconds
-- The garden must look truly beautiful
+**Risks & mitigations:**
+- ASO is harder than a Countdown App → **Social Share / Memory Card** drives virality
+- User must grasp the concept within the first 5 seconds → **"plant a seed" onboarding** + First Bloom Guarantee
+- The garden must look truly beautiful → prioritize visuals + **season glow** + catch animation
+- Data loss due to local-first → **backup reminder** (nudge to Export ZIP) + manual Drive export
 
 ---
 

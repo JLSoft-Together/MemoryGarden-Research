@@ -113,6 +113,8 @@ Examples:
 
 Players gradually unlock rare plants as they continue documenting their lives.
 
+The collection is presented as an **Atlas/Pokédex**: a grid of plants, silhouette slots for locked species, a **dex number** per plant, and a **"catch" animation** when a new plant unlocks — turning empty slots into a collecting drive.
+
 ### 📖 Memory Timeline
 
 Automatically build a beautiful timeline of life events.
@@ -174,6 +176,20 @@ Beautiful widgets designed for daily inspiration.
 - New blooms
 - Collection status
 
+### 🚀 Onboarding & Activation
+
+Get users to the "aha" moment fast.
+
+- **"Plant a seed" onboarding**: welcome → pick style → plant your first memory → First Bloom → short tour (~5s to grasp the concept)
+- **Gallery-seeded first memory**: pick one photo → EXIF + ML Kit auto-fills date/location/category → one tap creates the first memory
+- **First Bloom Guarantee**: the first memory always blooms into a rare plant (season-immune)
+- **3-Memory Starter Quest**: log the first 3 memories → unlock a badge
+- **Quick-capture**: fast 1-photo + 1-line entry
+
+### 📤 Social Share / Memory Card
+
+Export a single memory or the whole garden as a **beautiful image card** (season palette + watermark) to share on social media — boosting brand awareness (ASO). Rendered on-device, no server.
+
 ### 🔒 Local-First Privacy
 
 Memory Garden is designed with privacy in mind. User memories are stored locally on the device.
@@ -196,6 +212,8 @@ Features:
 - Local backup
 - Export to file
 - Import from backup
+- **Backup reminder**: nudge to Export ZIP when it has been a while — mitigates the data-loss risk of local-first
+- **Manual Google Drive export** (optional): a copy the user actively creates, no auto-sync, no account
 - Future cloud sync support
 
 ---

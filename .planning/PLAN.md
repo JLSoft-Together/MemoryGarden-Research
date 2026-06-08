@@ -44,6 +44,9 @@ brainstorm/mockups/
 - [x] index.html
 - [x] verify mở chạy được
 - [x] **Season System (4 mùa)** — dựng vào mockup (data/app/css). Design: `.planning/SEASON_SYSTEM.md`
+- [x] **Onboarding** — overlay 5 bước "trải nghiệm gieo mầm" (data/app/css). Design: `.planning/ONBOARDING.md`
+- [x] **Settings (Cài đặt)** — màn riêng 5 nhóm (Gói · Giao diện/Mùa · Dữ liệu · Thông báo · Chung). Vào từ More › Cài đặt + gear ⚙️ appbar.
+- [x] **Activation & Retention add-ons** — Mood Tracker · Social Share card · AI Recap (preview/Phase 2) · Backup reminder + màn Backup · 3-Memory Starter Quest · Quick-capture · Pokédex dex# + catch animation · Season glow toàn màn · Timeline Life-Journey động · wire edit/delete/gallery-seed.
 
 ## Ghi chú
 - Repo research, KHÔNG có code Android (Kotlin) → bỏ qua android-code-indexer / bug-pool.
@@ -55,3 +58,38 @@ brainstorm/mockups/
 - **Spec sản phẩm:** đã sync vào `base/Memory Garden.md` (mục 9 + Garden System + Rewarded Ads + MVP scope).
 - **Mockup:** dựng vào `data.js` / `app.js` / `base.css` — switcher + banner + particle (Garden),
   badge + seasonal progress (Atlas), "nở rộ mùa" + Out-of-season Seed (Plant detail). Mở mặc định mùa **Hạ** (2026-06).
+
+## Bổ sung — Onboarding ("trải nghiệm gieo mầm")
+- **Design đầy đủ:** `.planning/ONBOARDING.md`.
+- **Flow 5 bước (overlay):** Welcome (concept 5s) → Style (Cozy/Pixel) → Seed (chạm mood, tự gieo) →
+  First Bloom (animation + reward 🏆🎁) → Tour (Atlas/Season/Widget) → đáp xuống **Garden**.
+- **Payoff:** mở cây hiếm `p05` + lấp ô trống cuối vườn bằng cây "Mới 🌟" (guard `onboard.applied`).
+- **Mockup:** `js/app.js` (section ONBOARDING), `css/base.css` (section ONBOARDING + `.plot.fresh`),
+  `index.html` (nút 🚀 Onboarding). Replay: toolbar + More › "Xem lại Onboarding".
+- Local-first → **không account/đăng nhập**; skip ở mọi bước trừ bloom.
+
+## Bổ sung — Settings (Cài đặt)
+- **Vào màn:** More › ⚙️ Cài đặt **hoặc** gear ⚙️ trên appbar (thay nút hồ sơ cũ chưa wire).
+- **5 nhóm:**
+  1. **Tài khoản & Gói** — Pro upsell card · Khôi phục mua hàng · Theme & Skins (→ Customization).
+  2. **Giao diện & Mùa** — segment Cozy/Pixel · **Bán cầu Bắc/Nam** (đổi lịch 4 mùa: Nam dịch +6 tháng) · toggle **Hiệu ứng môi trường** (tắt particle vườn).
+  3. **Dữ liệu & Quyền riêng tư** — Export/Import ZIP · Backup & Restore (→ màn Backup) · dung lượng đã dùng · **Xóa toàn bộ dữ liệu** (2 bước xác nhận, danger zone).
+  4. **Tiện ích & Thông báo** — toggle nhắc ghi chép hàng ngày · Widgets.
+  5. **Chung & Hỗ trợ** — Ngôn ngữ vi/en · Về ứng dụng · Phản hồi · Xem lại Onboarding.
+- **State (DataStore ở app thật):** `hemisphere`, `particleFx`, `dailyReminder`/`reminderTime`, `lang`, `proActive`, `confirmWipe`.
+- **Mockup:** `js/app.js` (`scSettings` + ROUTES + handleAct), `js/data.js` (`STORAGE`), `css/base.css` (section SETTINGS), `index.html` (gear ⚙️ + legend).
+- **Tác động thật:** Bán cầu Nam → `currentSeasonId()` dịch +6 tháng (đồng bộ "mùa đang diễn ra"); tắt particle → `seasonFx()` rỗng. Local-first: mọi lựa chọn lưu cục bộ, không server.
+
+## Bổ sung — Activation & Retention add-ons
+- **Spec sản phẩm:** đã sync vào `base/Memory Garden.md` (mục 1 Mood/Quick-capture · mục 3 Pokédex · Backup · mục 10 Onboarding & Activation · mục 11 Social Share · MVP scope · Phase 2 AI Recap) + bản song ngữ `base/vi/` & `base/en/`.
+- **Mood Tracker** — `data.js` `MOODS`/field `mood`; `app.js` chips ở Create + badge ở Memory detail + memRow meta + card "Tâm trạng năm nay" (Timeline‹Năm›).
+- **Social Share** — `playShareCard()` overlay card kỷ niệm/khu vườn (tint theo mùa + watermark); vào từ Memory detail + Garden. Lưu ảnh = toast.
+- **AI Memory Recap (Phase 2 — preview)** — `recapCard()` ở Timeline‹Tháng› gắn badge "Sắp ra mắt" → `playRecap()` overlay tóm tắt tĩnh. Không gọi AI thật.
+- **Backup reminder** — `data.js` `BACKUP`; banner nhắc dismissible ở Garden + màn `scBackup` (Export ZIP / Drive thủ công / toggle nhắc). Local-first, không cloud-sync nền.
+- **3-Memory Starter Quest** + **Quick-capture** — ở Garden (`scGarden`); quick-capture mở bottom-sheet `playQuickCapture()`.
+- **Pokédex** — dex `#NNN` (`dexNo`) ở Atlas + Plant detail; `playCatch()` reveal "sưu tầm" (demo từ Plant detail locked).
+- **Season glow toàn màn** — `.phone::after` ambient lái bằng `--season-tint` (additive, pointer-events none).
+- **Timeline Life-Journey động** — derive từ MEMORIES (rare+) + MILESTONES (done), bỏ hardcode.
+- **Wire stub** — gallery-seed điền cat/sub/title + dòng "AI nhận diện"; edit memory (`state.editing`, prefill); delete có bước xác nhận (`confirmDelete()`).
+- **Fix kèm:** thêm delegation click trên `.phone` cho overlay (bloom/onboarding/fx) — trước đó nằm ngoài `#screenBody` nên không bắt được click.
+- **Mockup giữ depth visual/stub + toast** (không persist state nặng). Mở trực tiếp `index.html`.

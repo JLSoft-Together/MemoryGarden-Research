@@ -87,6 +87,7 @@ Mỗi mùa "ưu ái" 2 category (→ +rare% + glow), và mỗi category có "mù
 - **Season banner**: weather emoji + tên mùa + dòng bonus + badge "● đang diễn ra" nếu khớp lịch thực.
 - **Particle overlay** trong vườn: 🌸/✨/🍂/❄️ rơi (pointer-events none, không chặn tap).
 - **Tint phủ** vườn theo mùa (overlay, giữ nguyên `--garden-bg` của theme → không phá pixel grass).
+- **Season glow toàn màn** (ambient): lớp `.phone::after` phủ nhẹ toàn screen theo `--season-tint` (radial top, opacity thấp, `mix-blend: multiply`, `pointer-events: none`). Nâng từ glow-per-plot → cảm giác cả app "thở" theo mùa. Vẫn **additive-only**, không đụng growth/first-bloom.
 - **Plot glow** `☀️+` cho cây hợp mùa (additive).
 - **Atlas badge** mùa nở rộ góc ô + ribbon seasonal + dòng progress seasonal riêng.
 - **Plant detail**: "Nở rộ mùa X · bloom [variant]"; seasonal trái mùa → nút Out-of-season Seed.

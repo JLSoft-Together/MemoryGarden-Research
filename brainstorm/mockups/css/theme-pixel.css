@@ -134,3 +134,47 @@ body[data-theme="pixel"] .bloom-overlay {
     repeating-conic-gradient(rgba(255,255,255,.9) 0% 25%, rgba(155,209,106,.9) 0% 50%) 0 0 / 40px 40px;
 }
 body[data-theme="pixel"] .bloom-overlay .seedling { image-rendering: pixelated; }
+
+/* ============================================================
+   PIXEL — component mới (mood / share / recap / backup / quest /
+   toggle / catch / quick-capture): vuông góc + viền đen + hard shadow
+   ============================================================ */
+body[data-theme="pixel"] .backup-banner,
+body[data-theme="pixel"] .quest-card,
+body[data-theme="pixel"] .toggle-row,
+body[data-theme="pixel"] .recap-card,
+body[data-theme="pixel"] .recap-preview,
+body[data-theme="pixel"] .confirm-box,
+body[data-theme="pixel"] .ai-result,
+body[data-theme="pixel"] .edit-banner,
+body[data-theme="pixel"] .qc-input,
+body[data-theme="pixel"] .share-card,
+body[data-theme="pixel"] .fx-overlay.sheet .fx-sheet {
+  border: 2px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border);
+  border-radius: 0;
+}
+body[data-theme="pixel"] .backup-banner { background: var(--bg-card); }
+body[data-theme="pixel"] .backup-banner .bb-act,
+body[data-theme="pixel"] .badge-warn,
+body[data-theme="pixel"] .soon {
+  border-radius: 0; border: 2px solid var(--border); box-shadow: 2px 2px 0 var(--border);
+}
+/* toggle = công tắc vuông pixel */
+body[data-theme="pixel"] .toggle { border-radius: 0; border: 2px solid var(--border); box-shadow: 2px 2px 0 var(--border); }
+body[data-theme="pixel"] .toggle::after { border-radius: 0; border: 1px solid var(--border); }
+/* dex number nổi rõ trên nền giấy game */
+body[data-theme="pixel"] .atlas .cell .dex { color: var(--text); opacity: .9; }
+/* mood bar viền đậm */
+body[data-theme="pixel"] .mood-row .bar { border: 2px solid var(--border); }
+/* headings Press Start 2P rất to → thu nhỏ */
+body[data-theme="pixel"] .recap-preview h2,
+body[data-theme="pixel"] .confirm-box h2,
+body[data-theme="pixel"] .qc-sheet h2,
+body[data-theme="pixel"] .catch-reveal h2 { font-size: 12px; line-height: 1.6; }
+body[data-theme="pixel"] .share-card .sc-title { font-size: 13px; line-height: 1.5; }
+body[data-theme="pixel"] .share-card .sc-mark { color: var(--primary); }
+body[data-theme="pixel"] .recap-card { padding-top: 28px; }
+/* catch reveal pixel render */
+body[data-theme="pixel"] .catch-ball,
+body[data-theme="pixel"] .catch-reveal .cr-emo { image-rendering: pixelated; }

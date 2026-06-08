@@ -21,6 +21,18 @@ const CATEGORIES = [
 
 const catById = (id) => CATEGORIES.find((c) => c.id === id) || CATEGORIES[0];
 
+// --- Moods (Mood Tracker) ---
+// Gắn 1 tâm trạng cho mỗi memory → sau này thống kê biểu đồ cảm xúc.
+const MOODS = [
+  { id: "joy",   name: "Vui",       emoji: "😄", color: "#f5b945" },
+  { id: "calm",  name: "Bình yên",  emoji: "😌", color: "#6fae6b" },
+  { id: "moved", name: "Xúc động",  emoji: "🥹", color: "#e06a8b" },
+  { id: "sad",   name: "Buồn",      emoji: "😢", color: "#4b9fd4" },
+  { id: "hyped", name: "Hào hứng",  emoji: "🔥", color: "#e8945a" },
+  { id: "tired", name: "Mệt",       emoji: "😴", color: "#8a8f98" },
+];
+const moodById = (id) => MOODS.find((m) => m.id === id);
+
 // --- Plant growth stages (Garden System) ---
 const STAGES = [
   { id: "seed",   name: "Seed",      emoji: "🌰" },
@@ -126,35 +138,35 @@ const RARITY = {
 // --- Sample memories (Memory Management + Timeline) ---
 const MEMORIES = [
   { id: "m1", title: "Cà phê sớm ở Đà Lạt", cat: "food", sub: "Coffee",
-    date: "2026-05-28", photo: "☕", plant: "p08", rarity: "rare",
+    date: "2026-05-28", photo: "☕", plant: "p08", rarity: "rare", mood: "calm",
     desc: "Sương sớm, ly cà phê nóng, view đồi thông. Yên tĩnh đến lạ.",
     tags: ["dalat", "coffee", "morning"] },
   { id: "m2", title: "Leo đỉnh Langbiang", cat: "adventure", sub: "Hiking",
-    date: "2026-05-27", photo: "⛰️", plant: "p03", rarity: "rare",
+    date: "2026-05-27", photo: "⛰️", plant: "p03", rarity: "rare", mood: "hyped",
     desc: "3 tiếng leo, mệt nhưng view trên đỉnh xứng đáng từng giọt mồ hôi.",
     tags: ["hiking", "langbiang"] },
   { id: "m3", title: "Kỷ niệm 2 năm 💍", cat: "relationship", sub: "Anniversary",
-    date: "2026-05-20", photo: "🌹", plant: "p11", rarity: "common",
+    date: "2026-05-20", photo: "🌹", plant: "p11", rarity: "common", mood: "moved",
     desc: "Bữa tối nhỏ, nến và hoa hồng. Hai năm rồi đó.",
     tags: ["anniversary", "love"] },
   { id: "m4", title: "Xem One Piece movie", cat: "entertain", sub: "Anime",
-    date: "2026-05-15", photo: "🎬", plant: "p16", rarity: "common",
+    date: "2026-05-15", photo: "🎬", plant: "p16", rarity: "common", mood: "joy",
     desc: "Rạp đông kín fan. Cảm xúc vỡ òa đoạn cuối.",
     tags: ["anime", "onepiece"] },
   { id: "m5", title: "Đọc xong Atomic Habits", cat: "growth", sub: "Books",
-    date: "2026-04-30", photo: "📖", plant: "p21", rarity: "common",
+    date: "2026-04-30", photo: "📖", plant: "p21", rarity: "common", mood: "calm",
     desc: "Cuốn sách đổi cách mình nhìn thói quen. 1% mỗi ngày.",
     tags: ["books", "habits"] },
   { id: "m6", title: "Biển Nha Trang", cat: "adventure", sub: "Beach",
-    date: "2026-04-12", photo: "🏖️", plant: "p02", rarity: "common",
+    date: "2026-04-12", photo: "🏖️", plant: "p02", rarity: "common", mood: "joy",
     desc: "Nắng, cát, sóng. Bữa hải sản nhớ đời.",
     tags: ["beach", "nhatrang"] },
   { id: "m7", title: "Sinh nhật tuổi 26", cat: "milestone", sub: "Birthday",
-    date: "2026-03-08", photo: "🎂", plant: "p25", rarity: "common",
+    date: "2026-03-08", photo: "🎂", plant: "p25", rarity: "common", mood: "joy",
     desc: "Bạn bè bất ngờ tổ chức. Bánh kem dâu yêu thích.",
     tags: ["birthday"] },
   { id: "m8", title: "Thử ramen mới mở", cat: "food", sub: "New Food",
-    date: "2026-02-14", photo: "🍜", plant: "p06", rarity: "common",
+    date: "2026-02-14", photo: "🍜", plant: "p06", rarity: "common", mood: "hyped",
     desc: "Quán ramen Nhật mới khai trương. Nước dùng đậm đà.",
     tags: ["ramen", "food"] },
 ];
@@ -212,6 +224,20 @@ const GARDEN_PLOTS = [
 ];
 
 const plantById = (id) => PLANTS.find((p) => p.id === id);
+
+// Số dex kiểu Pokédex: vị trí cây trong catalog, pad 3 chữ số (#001..#034)
+const dexNo = (id) => {
+  const i = PLANTS.findIndex((p) => p.id === id);
+  return i < 0 ? "—" : String(i + 1).padStart(3, "0");
+};
+
+// --- Backup state (Auto-backup Reminder — local-first) ---
+// Mockup tĩnh: nhắc Export ZIP khi đã lâu chưa sao lưu. Không cloud-sync nền.
+const BACKUP = { lastDays: 5, remindAfter: 3, autoRemind: true };
+
+// --- Storage usage (Settings › Dữ liệu — local-first) ---
+// Ước tính dung lượng ảnh/video app chiếm trên máy. Mockup tĩnh.
+const STORAGE = { totalMB: 248, photos: 86, videos: 4 };
 
 // --- Derived stats ---
 // Core completion CHỈ tính cây thường (loại trừ seasonal) — seasonal là bộ sưu tập riêng,

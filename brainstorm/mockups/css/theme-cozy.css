@@ -68,3 +68,12 @@ body[data-theme="cozy"] .navitem.active .ico {
 body[data-theme="cozy"] .section-title,
 body[data-theme="cozy"] .appbar .title,
 body[data-theme="cozy"] .stat .n { letter-spacing: .2px; }
+
+/* component mới: bóng ấm mềm, đồng bộ vibe cozy */
+body[data-theme="cozy"] .backup-banner,
+body[data-theme="cozy"] .recap-card,
+body[data-theme="cozy"] .quest-card,
+body[data-theme="cozy"] .toggle-row { box-shadow: 0 6px 18px rgba(120,100,60,.10); }
+body[data-theme="cozy"] .soon,
+body[data-theme="cozy"] .badge-warn { box-shadow: 0 3px 8px rgba(232,164,90,.30); }
+body[data-theme="cozy"] .share-card { box-shadow: 0 16px 44px rgba(40,30,10,.30); }

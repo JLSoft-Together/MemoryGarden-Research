@@ -102,6 +102,8 @@ Dữ liệu lưu hoàn toàn trên thiết bị.
 
 * Export ZIP
 * Import ZIP
+* **Backup reminder** (local): nhắc Export ZIP khi đã lâu chưa sao lưu (DataStore `lastBackupAt` + WorkManager/Glance notification). Khắc phục rủi ro mất dữ liệu của mô hình local-first.
+* **Google Drive export (thủ công, tuỳ chọn)**: người dùng chủ động đẩy 1 bản ZIP lên Drive cá nhân. **Không** auto cloud-sync, **không** cần tài khoản app — vẫn đúng triết lý local-first.
 
 Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc Cloud Sync).
 
@@ -118,6 +120,8 @@ Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc
 * Thêm mô tả
 * Thêm category
 * Thêm tags
+* Thêm **tâm trạng (Mood)** — gắn 1 cảm xúc cho mỗi memory (làm nền cho biểu đồ cảm xúc)
+* **Quick-capture** — ghi nhanh 1 ảnh + 1 dòng, giảm rào cản blank-page
 
 ---
 
@@ -139,6 +143,7 @@ Backend chỉ được cân nhắc ở các phase rất xa (Couple Garden hoặc
 * Danh sách cây chưa mở khóa
 * Progress theo từng category
 * Overall Completion
+* **Garden Atlas / Pokédex framing**: grid ô cây, slot silhouette cho cây chưa mở, **số dex** (#001…) mỗi loài, **catch animation** khi mở khóa cây mới — tạo động lực sưu tầm "lấp ô trống"
 
 ---
 
@@ -245,16 +250,37 @@ Hiển thị kỷ niệm cùng ngày trong quá khứ.
 
 ---
 
+## 10. Onboarding & Activation
+
+> Funnel: `Install → First Memory → First Bloom → Catalog slot trống → D1 retention`. Chi tiết: `brainstorm/Brainstorm Ideas - Activation x Collection Gamers.md`.
+
+* **Onboarding "gieo mầm"**: flow ngắn (welcome → chọn style → gieo kỷ niệm đầu → First Bloom → tour) — truyền concept "game sưu tầm kỷ niệm" trong ~5 giây.
+* **Gallery-seeded first memory**: chọn 1 ảnh từ thư viện → EXIF + on-device ML Kit tự điền date/location/category → 1 tap thành memory đầu.
+* **First Bloom Guarantee**: memory đầu tiên LUÔN nở thành cây hiếm (miễn nhiễm mùa) + animation blank-to-bloom.
+* **3-Memory Starter Quest**: tiến độ 3 kỷ niệm đầu → mở huy hiệu. Giữ chân qua giai đoạn tạo memory đầu.
+* **Quick-capture**: shortcut ghi nhanh (1 ảnh + 1 dòng) giảm rào cản.
+
+## 11. Social Share / Memory Card
+
+* Xuất **card ảnh** cho 1 kỷ niệm hoặc cho cả khu vườn (palette theo mùa + watermark "Memory Garden").
+* Mục tiêu: virality + **ASO** — người dùng share lên mạng xã hội → nhận diện thương hiệu, không cần backend.
+* MVP: render bitmap từ Compose + chia sẻ qua hệ thống (Share Sheet). Không lưu server.
+
+---
+
 # MVP Scope (V1)
 
 ## Bắt buộc
 
-* Memory CRUD
+* Memory CRUD + **Mood**
 * Category
-* Collection
+* Collection — **Atlas/Pokédex framing** (dex-number, slot silhouette, catch animation)
 * Garden
 * 30-50 loại cây
-* Season System — ambient (palette + particle + bloom variant theo 4 mùa)
+* Season System — ambient (palette + particle + bloom variant theo 4 mùa) + **glow toàn màn**
+* **Onboarding & Activation**: Gallery-seeded first memory + First Bloom Guarantee + 3-Memory Starter Quest + Quick-capture
+* **Social Share / Memory Card** (đòn bẩy ASO)
+* **Backup reminder** (local notification nhắc Export ZIP)
 * Native Ads
 * Rewarded Ads
 
@@ -262,6 +288,7 @@ Hiển thị kỷ niệm cùng ngày trong quá khứ.
 
 * Seasonal-exclusive collection + Seasonal Event (Sakura Week...)
 * Memory-date season (lớp B — gắn Timeline/Life Journey)
+* **AI Memory Recap** — tự tóm tắt hành trình tháng/năm thành "Memory Recap" (on-device hoặc opt-in cloud). Tách khỏi MVP theo nguyên tắc "đo activation trước".
 
 ## Chưa làm
 
@@ -269,7 +296,7 @@ Hiển thị kỷ niệm cùng ngày trong quá khứ.
 * Account
 * Couple Garden
 * Family Garden
-* AI Features
+* AI Features khác (generative content, chatbot…) — riêng **AI Memory Recap** đã dời sang Phase 2 ở trên
 
 ---
 
