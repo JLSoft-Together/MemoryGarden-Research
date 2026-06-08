@@ -18,6 +18,26 @@ brainstorm/mockups/index.html
 
 Toggle style Cozy ↔ Pixel qua button trên toolbar.
 
+## Kiến trúc mockup (vanilla JS — không framework)
+
+Single-page, state-driven. Nắm 3 điểm này trước khi sửa `js/app.js`:
+
+- **Router**: `ROUTES` map `screenId → scXxx()`. Mỗi `scXxx()` trả `{title, sub, body, back?}` với `body` = chuỗi HTML. `render()` ghi `#screenBody.innerHTML` + appbar + nav. `go(screen)` set `state.screen` rồi `render()`. Thêm màn = thêm 1 hàm `scXxx` + 1 entry trong `ROUTES`.
+- **Event delegation — 2 tầng, đây là gotcha lớn nhất**:
+  1. Màn chính: 1 listener trên `#screenBody` bắt mọi `[data-act]` → `handleAct(act, dataset)`. HTML trong body chỉ đặt `data-act` / `data-id`, không gắn handler trực tiếp.
+  2. Overlay (`onboarding`, `coach`, bloom, fx) render **ngoài** `#screenBody`, thẳng vào `.phone` → listener trên KHÔNG bắt được. Có listener riêng trên `.phone`, scope theo selector `.bloom-overlay, #onboarding, .fx-overlay, #coach`. **Thêm overlay mới → bắt buộc thêm selector của nó vào danh sách này, nếu không click chết.**
+- **`handleAct` là switch trung tâm**: mọi tương tác (nav, season, settings toggle, bước onboarding/coach, fx) đều route qua đây.
+
+## Theming & mùa
+
+- `<body data-theme="cozy|pixel" data-season="...">`. `base.css` = biến CSS + layout chung; `theme-cozy.css` / `theme-pixel.css` chỉ override token. `render()` set `data-season` + `--season-tint` mỗi lần vẽ.
+- Thêm UI mới: **dùng biến CSS** (`--primary`, `--bg-card`, `--text-dim`, `--radius-md`, `--font-display`…), không hardcode màu/radius → tự ăn cả 2 theme + 4 mùa.
+
+## data.js — nguồn sự thật
+
+- `STATS` là **getter dẫn xuất** (tính live từ `PLANTS` / `MEMORIES`), không phải số cứng — đổi data thì stats đổi theo.
+- `currentSeasonId()` derive từ `new Date()` + `state.hemisphere` (Nam bán cầu dịch +6 tháng), bọc try/catch vì `state` còn ở TDZ lúc khởi tạo object literal.
+
 ## Cấu trúc
 
 ```
@@ -36,8 +56,8 @@ brainstorm/
     css/base.css        Layout, phone frame, component chung
     css/theme-cozy.css  Pastel, bo tròn
     css/theme-pixel.css Pixel art, viền đậm, retro
-    js/data.js          Catalog cây, sample memories, SEASONS, categories, milestones
-    js/app.js           Router, render 8 màn, interactions, season switcher
+    js/data.js          Catalog cây, sample memories, SEASONS, categories, milestones (STATS = getter dẫn xuất)
+    js/app.js           Router + render 8 màn + handleAct + overlay (onboarding, coach, bloom, fx)
 ```
 
 ## Sản phẩm — Memory Garden: Your Life Journey

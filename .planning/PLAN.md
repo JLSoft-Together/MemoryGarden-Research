@@ -49,6 +49,11 @@ brainstorm/mockups/
 - [x] **Activation & Retention add-ons** — Mood Tracker · Social Share card · AI Recap (preview/Phase 2) · Backup reminder + màn Backup · 3-Memory Starter Quest · Quick-capture · Pokédex dex# + catch animation · Season glow toàn màn · Timeline Life-Journey động · wire edit/delete/gallery-seed.
 - [x] **Coach guide (Garden first-entry)** — spotlight overlay 3 bước: ô đất trống → nút + thêm kỷ niệm → mục tiêu vườn. Auto bật sau onboarding; link "💡 Xem hướng dẫn" ở Garden để replay.
 
+## Spec code Android (Compose)
+- **Spec đầy đủ:** `.planning/COMPOSE_SPEC.md` — kiến trúc MVI, data/domain layer, 8 màn + overlay, design system Cozy/Pixel (token+Modifier, KHÔNG dùng Styles API alpha — để dành post-MVP), engine mùa + growth, chia **9 phase** (Phase 0 nền tảng → Phase 8 release).
+- Map mockup (vanilla JS) → Compose ở mục 11 của spec.
+- **Asset spec:** `.planning/ASSET_SPEC.md` — danh sách asset (icon, ~104 plant sprite, animation, audio), tách Design tay / Gen AI / Code-drawn, bảng số lượng + pipeline. 3 quyết định cần chốt sớm: (a) MVP 1 hay 2 style, (b) plant stage tiết kiệm vs full, (c) audio vào MVP?
+
 ## Ghi chú
 - Repo research, KHÔNG có code Android (Kotlin) → bỏ qua android-code-indexer / bug-pool.
 - Activation funnel (brainstorm doc): Garden Home + Atlas + Create Memory + First
